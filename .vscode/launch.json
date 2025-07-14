@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "coreclr",
+            "request": "launch",
+            "name": "Launch .NET Tests",
+            "program": "${workspaceFolder}/Heroes/bin/Debug/net9.0/${input:assemblyName}.dll"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "assemblyName",
+            "type": "promptString",
+            "description": "Enter the name of the test assembly to debug (e.g., Heroes)"
+        }
+    ]
+}
