@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj": {}
+    "C:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj": {}
   },
   "projects": {
-    "c:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj": {
+    "C:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj",
+        "projectUniqueName": "C:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj",
         "projectName": "Heroes",
-        "projectPath": "c:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj",
+        "projectPath": "C:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\Heroes.csproj",
         "packagesPath": "C:\\Users\\p40007y\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\obj\\",
+        "outputPath": "C:\\Users\\p40007y\\OneDrive - BYU-Idaho\\Documents\\Projects\\Common\\Heroes\\Heroes\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
