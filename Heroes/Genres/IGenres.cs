@@ -2,6 +2,16 @@ namespace Heroes;
 
 public interface IGenres : IDictionary<String, IGenre>
 {
+    static public Genres GENRES = (Genres)CONVERT_DICTIONARY_TO_GENRES(new Dictionary<String, IGenre> {
+        { "Unknown", new Genre(Key: "Unknown", Name: "Unknown") },
+        { "Fantasy", new Genre(Key: "Fantasy", Name: "Fantasy") },
+        { "Western", new Genre(Key: "Western", Name: "Western") },
+        { "Pulp Fiction", new Genre(Key: "Pulp Fiction", Name: "Pulp Fiction") },
+        { "Modern", new Genre(Key: "Modern", Name: "Modern") },
+        { "Star Hero", new Genre(Key: "Star Hero", Name: "Star Hero") },
+        { "Champions", new Genre(Key: "Champions", Name: "Champions") },
+        { "Custom", new Genre(Key: "Custom", Name: "Custom") }
+    });
     static public ICollection<string> KEYS(Dictionary<String, IGenre> Genres)
     {
         return Genres.Keys;
@@ -14,20 +24,26 @@ public interface IGenres : IDictionary<String, IGenre>
     {
         return false;
     }
+    /*
     static public IGenre GET_GENRE(IGenres Genres, String Key)
     {
         return Genres[Key];
     }
+    */
+    /*
     static public void SET_GENRE(IGenres Genres, String Key, IGenre Genre)
     {
         Genres[Key] = Genre;
     }
+    */
+    /*
     static public void ADD(IGenres Genres, String Key, IGenre Genre)
     {
         Genre.Key = Key;
         if (((IDictionary<String, IGenre>)Genres).ContainsKey(Key)) Genres[Key] = Genre;
         else ((IDictionary<String, IGenre>)Genres).Add(key: Key, value: Genre);
     }
+    */
     static public bool TRY_GET_VALUE(IGenres Genres, String Key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out IGenre Value)
     {
         IGenre? genreValue;
@@ -57,10 +73,12 @@ public interface IGenres : IDictionary<String, IGenre>
     {
         return Genres.Remove(Item);
     }
+    /*
     static public IEnumerator<KeyValuePair<string, IGenre>> GET_ENUMERATOR(IGenres Genres)
     {
         return Genres.GetEnumerator();
     }
+    */
     static public Dictionary<String, IGenre> CONVERT_GENRES_TO_DICTIONARY(IGenres Genres)
     {
         Dictionary<String, IGenre> result = new();
@@ -73,6 +91,9 @@ public interface IGenres : IDictionary<String, IGenre>
     static public IGenres CONVERT_DICTIONARY_TO_GENRES(Dictionary<String, IGenre> Dictionary)
     {
         IGenres result = new Genres();
+        if (result.Count > 0)
+            foreach (var key in result.Keys)
+                result.Remove(key);
         foreach (KeyValuePair<String, IGenre> genre in Dictionary)
         {
             result.Add(genre);
@@ -81,6 +102,9 @@ public interface IGenres : IDictionary<String, IGenre>
     }
     static public void INIT(IGenres Genres, int Count = 1)
     {
+        if (Genres.Count > 0)
+            foreach (var key in Genres.Keys)
+                Genres.Remove(key);
         for (int index = 0; index < Count; index++)
             Genres.Add(new Genre(Index: index + 1));
     }
@@ -102,6 +126,9 @@ public interface IGenres : IDictionary<String, IGenre>
     }
     static public void INIT(IGenres Genres, IGenre[] GenreArray)
     {
+        if (Genres.Count > 0)
+            foreach (var key in Genres.Keys)
+                Genres.Remove(key);
         foreach (IGenre genre in GenreArray)
         {
             Genres.Add(genre);
@@ -109,6 +136,9 @@ public interface IGenres : IDictionary<String, IGenre>
     }
     static public void INIT(IGenres Genres, KeyValuePair<String, IGenre>[] GenrePairArray)
     {
+        if (Genres.Count > 0)
+            foreach (var key in Genres.Keys)
+                Genres.Remove(key);
         foreach (KeyValuePair<String, IGenre> genre in GenrePairArray)
         {
             Genres.Add(genre);
@@ -116,14 +146,25 @@ public interface IGenres : IDictionary<String, IGenre>
     }
     static public void INIT(IGenres Genres, Dictionary<String, String> Dictionary)
     {
-        throw new NotImplementedException();
+        if (Genres.Count > 0)
+            foreach (String key in Genres.Keys)
+                Genres.Remove(key);
+        foreach (String key in Dictionary.Keys)
+            Genres.Add(new Genre(Key: key, Name: Dictionary[key]));
     }
     static public void INIT(IGenres Genres, Dictionary<String, Genre> Dictionary)
     {
-        throw new NotImplementedException();
+        if (Genres.Count > 0)
+            foreach (var key in Genres.Keys)
+                Genres.Remove(key);
+        foreach (String key in Dictionary.Keys)
+            Genres.Add(new Genre(Key: key, Name: Dictionary[key].Name));
     }
     static public void INIT(IGenres Genres, IGenres Original)
     {
+        if (Genres.Count > 0)
+            foreach (var key in Genres.Keys)
+                Genres.Remove(key);
         foreach (KeyValuePair<String, IGenre> genre in Original)
         {
             Genres.Add(genre);

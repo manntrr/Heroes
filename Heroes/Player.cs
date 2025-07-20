@@ -13,7 +13,7 @@ public class Player
             Genres genres = [];
             foreach (KeyValuePair<String, Campaign> campaign in Campaigns)
             {
-                foreach (String genreKey in campaign.Value.Genres)
+                foreach (String genreKey in campaign.Value.GenreKeys.Keys)
                 {
                     genres.Add(genreKey, new Genre(genreKey, null));
                 }

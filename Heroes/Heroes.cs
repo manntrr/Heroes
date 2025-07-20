@@ -17,7 +17,8 @@ public class Heroes
             Genre genre = this.Genres["Genre " + ((counter % this.Genres.Count) + 1).ToString()];
             Genres genres = [];
             genres.Add(genre);
-            Campaign campaign = new(Key: "Campaign " + (counter + 1).ToString(), CampaignGenres: genres, Name: "Unknown");
+            Genres temp = this.Genres;
+            Campaign campaign = new(Key: "Campaign " + (counter + 1).ToString(), GenreKeys: new GenreKeySet(genres, ref temp), Name: "Unknown");
             this.Campaigns.Add(campaign.Key, campaign);
         }
         for (int counter = 0; counter < GameMasters; counter++)
