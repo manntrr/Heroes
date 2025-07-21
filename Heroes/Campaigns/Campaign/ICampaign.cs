@@ -1,4 +1,7 @@
-namespace Heroes;
+using Heroes.Genres;
+using Heroes.GameMasters;
+
+namespace Heroes.Campaigns.Campaign;
 
 public interface ICampaign
 {
@@ -7,8 +10,8 @@ public interface ICampaign
     static public String UnknownString = "Unknown";
     static public String DefaultKey = UnknownString + " " + CampaignString + " " + KeyString;
     static public String DefaultName = UnknownString + " " + CampaignString;
-    static public GenreKeySet DefaultGenreKeys = new(Genres: new Genres(IGenres.GENRES["Unknown"]), ref IGenres.GENRES);
-    static public GameMasters DefaultGameMasters = new GameMasters();
+    static public GenreKeySet DefaultGenreKeys = new(Genres: new Genres.Genres(IGenres.GENRES["Unknown"]), ref IGenres.GENRES);
+    static public GameMasters.GameMasters DefaultGameMasters = new GameMasters.GameMasters();
 
     static public void INIT(ICampaign Campaign)
     {
@@ -17,11 +20,11 @@ public interface ICampaign
         Campaign.GenreKeys = DefaultGenreKeys;
         Campaign.GameMasters = DefaultGameMasters;
     }
-    static public void INIT(ICampaign Campaign, String Name, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null)
+    static public void INIT(ICampaign Campaign, String Name, GenreKeySet? GenreKeys = null, GameMasters.GameMasters? GameMasters = null)
     {
         INIT(Campaign: Campaign, Key: Name + " " + KeyString, Name: Name, GenreKeys: GenreKeys, GameMasters: GameMasters);
     }
-    static public void INIT(ICampaign Campaign, String Key, String? Name = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null)
+    static public void INIT(ICampaign Campaign, String Key, String? Name = null, GenreKeySet? GenreKeys = null, GameMasters.GameMasters? GameMasters = null)
     {
         Campaign.Key = Key;
         if (Name is not null) Campaign.Name = Name;
@@ -39,10 +42,10 @@ public interface ICampaign
     public String Key { get; set; }
     public String Name { get; set; }
     public GenreKeySet GenreKeys { get; set; }
-    public GameMasters GameMasters { get; set; }
+    public GameMasters.GameMasters GameMasters { get; set; }
     public void Init();
-    public void Init(String Name, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null);
-    public void Init(String Key, String? Name = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null);
+    public void Init(String Name, GenreKeySet? GenreKeys = null, GameMasters.GameMasters? GameMasters = null);
+    public void Init(String Key, String? Name = null, GenreKeySet? GenreKeys = null, GameMasters.GameMasters? GameMasters = null);
     public void Init(int Index);
     public void Init(ICampaign Campaign);
     public void Init(Campaign Campaign);

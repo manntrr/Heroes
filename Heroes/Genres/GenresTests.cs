@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
-namespace Heroes;
+namespace Heroes.Genres;
 
 public class GenresTests
 {
-    KeyValuePair<String, IGenre>? genrePair = null;
+    KeyValuePair<String, Genre.IGenre>? genrePair = null;
     Genres? genres = null;
     GenreKeySet? genreKeySet = null;
     int? expectedSetupGenreCount = null;
@@ -190,9 +190,9 @@ public class GenresTests
         expectedGenreKeys = ["Genre 1"];
         expectedGenreNames = new Dictionary<String, String> {
             { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.DoesNotThrow(() => genrePair = new(key: expectedGenreKeys[0], value: new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
+        Assert.DoesNotThrow(() => genrePair = new(key: expectedGenreKeys[0], value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
         Assert.That(genrePair, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Genre: (KeyValuePair<String, IGenre>)genrePair));
+        Assert.DoesNotThrow(() => genres = new(Genre: (KeyValuePair<String, Genre.IGenre>)genrePair));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
         Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
@@ -227,9 +227,9 @@ public class GenresTests
             Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
             Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
         }
-        Assert.DoesNotThrow(() => genrePair = new(key: expectedGenreKeys[0], value: new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
+        Assert.DoesNotThrow(() => genrePair = new(key: expectedGenreKeys[0], value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
         Assert.That(genrePair, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres.Init(Genre: (KeyValuePair<String, IGenre>)genrePair));
+        Assert.DoesNotThrow(() => genres.Init(Genre: (KeyValuePair<String, Genre.IGenre>)genrePair));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
         Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
@@ -311,7 +311,7 @@ public class GenresTests
         expectedGenreKeys = ["Genre 1"];
         expectedGenreNames = new Dictionary<String, String> {
             { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.DoesNotThrow(() => genres = new(Genre: new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
+        Assert.DoesNotThrow(() => genres = new(Genre: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
         Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
@@ -346,7 +346,7 @@ public class GenresTests
             Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
             Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
         }
-        Assert.DoesNotThrow(() => genres.Init(Genre: new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
+        Assert.DoesNotThrow(() => genres.Init(Genre: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
         Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
@@ -367,8 +367,8 @@ public class GenresTests
             { expectedGenreKeys[0], "Unknown Genre" },
             { expectedGenreKeys[1], "Unknown Genre" } };
         Assert.DoesNotThrow(() => genres = new(Array: [
-            new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]),
-            new Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])]));
+            new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]),
+            new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])]));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
         Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
@@ -406,8 +406,8 @@ public class GenresTests
             Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
         }
         Assert.DoesNotThrow(() => genres.Init(Array: [
-            new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]),
-            new Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])]));
+            new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]),
+            new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])]));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
         Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
@@ -427,14 +427,14 @@ public class GenresTests
         expectedGenreNames = new Dictionary<String, String> {
             { expectedGenreKeys[0], "Unknown Genre" },
             { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.DoesNotThrow(() => genres = new(Array: new KeyValuePair<string, IGenre>[] {
-            new KeyValuePair<string, IGenre>(
+        Assert.DoesNotThrow(() => genres = new(Array: new KeyValuePair<string, Genre.IGenre>[] {
+            new KeyValuePair<string, Genre.IGenre>(
                 key: expectedGenreKeys[0],
-                value: new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])
+                value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])
                 ),
-            new KeyValuePair<string, IGenre>(
+            new KeyValuePair<string, Genre.IGenre>(
                 key: expectedGenreKeys[1],
-                value: new Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])
+                value: new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])
                 )}));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
@@ -472,14 +472,14 @@ public class GenresTests
             Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
             Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
         }
-        Assert.DoesNotThrow(() => genres.Init(Array: new KeyValuePair<string, IGenre>[] {
-            new KeyValuePair<string, IGenre>(
+        Assert.DoesNotThrow(() => genres.Init(Array: new KeyValuePair<string, Genre.IGenre>[] {
+            new KeyValuePair<string, Genre.IGenre>(
                 key: expectedGenreKeys[0],
-                value: new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])
+                value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])
                 ),
-            new KeyValuePair<string, IGenre>(
+            new KeyValuePair<string, Genre.IGenre>(
                 key: expectedGenreKeys[1],
-                value: new Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])
+                value: new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])
                 )}));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
@@ -500,9 +500,9 @@ public class GenresTests
         expectedGenreNames = new Dictionary<String, String> {
             { expectedGenreKeys[0], "Unknown Genre" },
             { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.DoesNotThrow(() => genres = new(Dictionary: new Dictionary<string, Genre> {
-            { expectedGenreKeys[0], new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])},
-            { expectedGenreKeys[1], new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[1]])}
+        Assert.DoesNotThrow(() => genres = new(Dictionary: new Dictionary<string, Genre.Genre> {
+            { expectedGenreKeys[0], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])},
+            { expectedGenreKeys[1], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[1]])}
         }));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
@@ -540,9 +540,9 @@ public class GenresTests
             Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
             Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
         }
-        Assert.DoesNotThrow(() => genres.Init(Dictionary: new Dictionary<string, Genre> {
-            { expectedGenreKeys[0], new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])},
-            { expectedGenreKeys[1], new Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[1]])}
+        Assert.DoesNotThrow(() => genres.Init(Dictionary: new Dictionary<string, Genre.Genre> {
+            { expectedGenreKeys[0], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])},
+            { expectedGenreKeys[1], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[1]])}
         }));
         Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);

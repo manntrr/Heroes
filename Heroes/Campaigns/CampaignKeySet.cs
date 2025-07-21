@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace Heroes;
+namespace Heroes.Campaigns;
 
 public class CampaignKeySet : HashSet<String>
 {

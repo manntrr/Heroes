@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
-namespace Heroes;
+namespace Heroes.Campaigns;
 
 public class CampaignsTests
 {
-    KeyValuePair<String, ICampaign>? CampaignPair = null;
+    KeyValuePair<String, Campaign.ICampaign>? CampaignPair = null;
     Campaigns? Campaigns = null;
     CampaignKeySet? CampaignKeySet = null;
     int? expectedSetupCampaignCount = null;
@@ -190,9 +190,9 @@ public class CampaignsTests
         expectedCampaignKeys = ["Campaign 1"];
         expectedCampaignNames = new Dictionary<String, String> {
             { expectedCampaignKeys[0], "Unknown Campaign" } };
-        Assert.DoesNotThrow(() => CampaignPair = new(key: expectedCampaignKeys[0], value: new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
+        Assert.DoesNotThrow(() => CampaignPair = new(key: expectedCampaignKeys[0], value: new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
         Assert.That(CampaignPair, Is.Not.Null);
-        Assert.DoesNotThrow(() => Campaigns = new(Campaign: (KeyValuePair<String, ICampaign>)CampaignPair));
+        Assert.DoesNotThrow(() => Campaigns = new(Campaign: (KeyValuePair<String, Campaign.ICampaign>)CampaignPair));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
         Assert.That(Campaigns.Count, Is.EqualTo(expectedCampaignCount));
@@ -227,9 +227,9 @@ public class CampaignsTests
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Key, Is.EqualTo(expectedSetupCampaignKeys[index]));
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Name, Is.EqualTo(expectedSetupCampaignNames[expectedSetupCampaignKeys[index]]));
         }
-        Assert.DoesNotThrow(() => CampaignPair = new(key: expectedCampaignKeys[0], value: new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
+        Assert.DoesNotThrow(() => CampaignPair = new(key: expectedCampaignKeys[0], value: new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
         Assert.That(CampaignPair, Is.Not.Null);
-        Assert.DoesNotThrow(() => Campaigns.Init(Campaign: (KeyValuePair<String, ICampaign>)CampaignPair));
+        Assert.DoesNotThrow(() => Campaigns.Init(Campaign: (KeyValuePair<String, Campaign.ICampaign>)CampaignPair));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
         Assert.That(Campaigns.Count, Is.EqualTo(expectedCampaignCount));
@@ -311,7 +311,7 @@ public class CampaignsTests
         expectedCampaignKeys = ["Campaign 1"];
         expectedCampaignNames = new Dictionary<String, String> {
             { expectedCampaignKeys[0], "Unknown Campaign" } };
-        Assert.DoesNotThrow(() => Campaigns = new(Campaign: new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
+        Assert.DoesNotThrow(() => Campaigns = new(Campaign: new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
         Assert.That(Campaigns.Count, Is.EqualTo(expectedCampaignCount));
@@ -346,7 +346,7 @@ public class CampaignsTests
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Key, Is.EqualTo(expectedSetupCampaignKeys[index]));
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Name, Is.EqualTo(expectedSetupCampaignNames[expectedSetupCampaignKeys[index]]));
         }
-        Assert.DoesNotThrow(() => Campaigns.Init(Campaign: new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
+        Assert.DoesNotThrow(() => Campaigns.Init(Campaign: new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
         Assert.That(Campaigns.Count, Is.EqualTo(expectedCampaignCount));
@@ -367,8 +367,8 @@ public class CampaignsTests
             { expectedCampaignKeys[0], "Unknown Campaign" },
             { expectedCampaignKeys[1], "Unknown Campaign" } };
         Assert.DoesNotThrow(() => Campaigns = new(Array: [
-            new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]]),
-            new Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])]));
+            new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]]),
+            new Campaign.Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])]));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
         Assert.That(Campaigns.Count, Is.EqualTo(expectedCampaignCount));
@@ -406,8 +406,8 @@ public class CampaignsTests
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Name, Is.EqualTo(expectedSetupCampaignNames[expectedSetupCampaignKeys[index]]));
         }
         Assert.DoesNotThrow(() => Campaigns.Init(Array: [
-            new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]]),
-            new Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])]));
+            new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]]),
+            new Campaign.Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])]));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
         Assert.That(Campaigns.Count, Is.EqualTo(expectedCampaignCount));
@@ -427,14 +427,14 @@ public class CampaignsTests
         expectedCampaignNames = new Dictionary<String, String> {
             { expectedCampaignKeys[0], "Unknown Campaign" },
             { expectedCampaignKeys[1], "Unknown Campaign" } };
-        Assert.DoesNotThrow(() => Campaigns = new(Array: new KeyValuePair<string, ICampaign>[] {
-            new KeyValuePair<string, ICampaign>(
+        Assert.DoesNotThrow(() => Campaigns = new(Array: new KeyValuePair<string, Campaign.ICampaign>[] {
+            new KeyValuePair<string, Campaign.ICampaign>(
                 key: expectedCampaignKeys[0],
-                value: new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])
+                value: new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])
                 ),
-            new KeyValuePair<string, ICampaign>(
+            new KeyValuePair<string, Campaign.ICampaign>(
                 key: expectedCampaignKeys[1],
-                value: new Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])
+                value: new Campaign.Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])
                 )}));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
@@ -472,14 +472,14 @@ public class CampaignsTests
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Key, Is.EqualTo(expectedSetupCampaignKeys[index]));
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Name, Is.EqualTo(expectedSetupCampaignNames[expectedSetupCampaignKeys[index]]));
         }
-        Assert.DoesNotThrow(() => Campaigns.Init(Array: new KeyValuePair<string, ICampaign>[] {
-            new KeyValuePair<string, ICampaign>(
+        Assert.DoesNotThrow(() => Campaigns.Init(Array: new KeyValuePair<string, Campaign.ICampaign>[] {
+            new KeyValuePair<string, Campaign.ICampaign>(
                 key: expectedCampaignKeys[0],
-                value: new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])
+                value: new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])
                 ),
-            new KeyValuePair<string, ICampaign>(
+            new KeyValuePair<string, Campaign.ICampaign>(
                 key: expectedCampaignKeys[1],
-                value: new Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])
+                value: new Campaign.Campaign(Key: expectedCampaignKeys[1], Name: expectedCampaignNames[expectedCampaignKeys[1]])
                 )}));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
@@ -500,9 +500,9 @@ public class CampaignsTests
         expectedCampaignNames = new Dictionary<String, String> {
             { expectedCampaignKeys[0], "Unknown Campaign" },
             { expectedCampaignKeys[1], "Unknown Campaign" } };
-        Assert.DoesNotThrow(() => Campaigns = new(Dictionary: new Dictionary<string, Campaign> {
-            { expectedCampaignKeys[0], new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])},
-            { expectedCampaignKeys[1], new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[1]])}
+        Assert.DoesNotThrow(() => Campaigns = new(Dictionary: new Dictionary<string, Campaign.Campaign> {
+            { expectedCampaignKeys[0], new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])},
+            { expectedCampaignKeys[1], new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[1]])}
         }));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);
@@ -540,9 +540,9 @@ public class CampaignsTests
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Key, Is.EqualTo(expectedSetupCampaignKeys[index]));
             Assert.That(Campaigns[expectedSetupCampaignKeys[index]].Name, Is.EqualTo(expectedSetupCampaignNames[expectedSetupCampaignKeys[index]]));
         }
-        Assert.DoesNotThrow(() => Campaigns.Init(Dictionary: new Dictionary<string, Campaign> {
-            { expectedCampaignKeys[0], new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])},
-            { expectedCampaignKeys[1], new Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[1]])}
+        Assert.DoesNotThrow(() => Campaigns.Init(Dictionary: new Dictionary<string, Campaign.Campaign> {
+            { expectedCampaignKeys[0], new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[0]])},
+            { expectedCampaignKeys[1], new Campaign.Campaign(Key: expectedCampaignKeys[0], Name: expectedCampaignNames[expectedCampaignKeys[1]])}
         }));
         Assert.That(Campaigns, Is.InstanceOf<Campaigns>());
         Assert.That(Campaigns, Is.Not.Null);

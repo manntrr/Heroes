@@ -1,4 +1,4 @@
-namespace Heroes;
+namespace Heroes.Genres.Genre;
 
 public interface IGenre
 {

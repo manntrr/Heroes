@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace Heroes;
+namespace Heroes.Genres;
 
 public class GenreKeySet : HashSet<String>
 {

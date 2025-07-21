@@ -1,17 +1,20 @@
-namespace Heroes;
+using Heroes.Genres.Genre;
+
+namespace Heroes.Genres;
 
 public interface IGenres : IDictionary<String, IGenre>
 {
     static public Genres GENRES = (Genres)CONVERT_DICTIONARY_TO_GENRES(new Dictionary<String, IGenre> {
-        { "Unknown", new Genre(Key: "Unknown", Name: "Unknown") },
-        { "Fantasy", new Genre(Key: "Fantasy", Name: "Fantasy") },
-        { "Western", new Genre(Key: "Western", Name: "Western") },
-        { "Pulp Fiction", new Genre(Key: "Pulp Fiction", Name: "Pulp Fiction") },
-        { "Modern", new Genre(Key: "Modern", Name: "Modern") },
-        { "Star Hero", new Genre(Key: "Star Hero", Name: "Star Hero") },
-        { "Champions", new Genre(Key: "Champions", Name: "Champions") },
-        { "Custom", new Genre(Key: "Custom", Name: "Custom") }
+        { "Unknown", new Genre.Genre(Key: "Unknown", Name: "Unknown") },
+        { "Fantasy", new Genre.Genre(Key: "Fantasy", Name: "Fantasy") },
+        { "Western", new Genre.Genre(Key: "Western", Name: "Western") },
+        { "Pulp Fiction", new Genre.Genre(Key: "Pulp Fiction", Name: "Pulp Fiction") },
+        { "Modern", new Genre.Genre(Key: "Modern", Name: "Modern") },
+        { "Star Hero", new Genre.Genre(Key: "Star Hero", Name: "Star Hero") },
+        { "Champions", new Genre.Genre(Key: "Champions", Name: "Champions") },
+        { "Custom", new Genre.Genre(Key: "Custom", Name: "Custom") }
     });
+    static public GenreKeySet DefaultGenreKeys = new(Genres: new Genres(Original: IGenres.GENRES), ref IGenres.GENRES);
     static public ICollection<string> KEYS(Dictionary<String, IGenre> Genres)
     {
         return Genres.Keys;
@@ -106,23 +109,23 @@ public interface IGenres : IDictionary<String, IGenre>
             foreach (var key in Genres.Keys)
                 Genres.Remove(key);
         for (int index = 0; index < Count; index++)
-            Genres.Add(new Genre(Index: index + 1));
+            Genres.Add(new Genre.Genre(Index: index + 1));
     }
     static public void INIT(IGenres Genres, String Key, String Name)
     {
-        INIT(Genres: Genres, Genre: new Genre(Key: Key, Name: Name));
+        INIT(Genres: Genres, Genre: new Genre.Genre(Key: Key, Name: Name));
     }
     static public void INIT(IGenres Genres, IGenre Genre)
     {
-        INIT(Genres: Genres, GenreArray: [new Genre(Genre: Genre)]);
+        INIT(Genres: Genres, GenreArray: [new Genre.Genre(Genre: Genre)]);
     }
     static public void INIT(IGenres Genres, String Key, IGenre Genre)
     {
-        INIT(Genres: Genres, Genre: new Genre(Key: Key, Name: Genre.Name));
+        INIT(Genres: Genres, Genre: new Genre.Genre(Key: Key, Name: Genre.Name));
     }
     static public void INIT(IGenres Genres, KeyValuePair<String, IGenre> Genre)
     {
-        INIT(Genres: Genres, Genre: new Genre(Key: Genre.Key, Name: Genre.Value.Name));
+        INIT(Genres: Genres, Genre: new Genre.Genre(Key: Genre.Key, Name: Genre.Value.Name));
     }
     static public void INIT(IGenres Genres, IGenre[] GenreArray)
     {
@@ -150,15 +153,15 @@ public interface IGenres : IDictionary<String, IGenre>
             foreach (String key in Genres.Keys)
                 Genres.Remove(key);
         foreach (String key in Dictionary.Keys)
-            Genres.Add(new Genre(Key: key, Name: Dictionary[key]));
+            Genres.Add(new Genre.Genre(Key: key, Name: Dictionary[key]));
     }
-    static public void INIT(IGenres Genres, Dictionary<String, Genre> Dictionary)
+    static public void INIT(IGenres Genres, Dictionary<String, Genre.Genre> Dictionary)
     {
         if (Genres.Count > 0)
             foreach (var key in Genres.Keys)
                 Genres.Remove(key);
         foreach (String key in Dictionary.Keys)
-            Genres.Add(new Genre(Key: key, Name: Dictionary[key].Name));
+            Genres.Add(new Genre.Genre(Key: key, Name: Dictionary[key].Name));
     }
     static public void INIT(IGenres Genres, IGenres Original)
     {
@@ -183,7 +186,7 @@ public interface IGenres : IDictionary<String, IGenre>
     public void Init(IGenre[] Genres);
     public void Init(KeyValuePair<String, IGenre>[] Genres);
     public void Init(Dictionary<String, String> Dictionary);
-    public void Init(Dictionary<String, Genre> Dictionary);
+    public void Init(Dictionary<String, Genre.Genre> Dictionary);
     public void Init(IGenres Genres);
     public void Add(IGenre genre);
 }

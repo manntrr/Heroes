@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Heroes;
+namespace Heroes.Genres.Genre;
 
 public class GenreTests
 {
