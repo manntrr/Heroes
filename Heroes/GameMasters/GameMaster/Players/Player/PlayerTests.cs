@@ -312,10 +312,10 @@ public class PlayerTests
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new(Name: expectedPlayerName, GameMasters: expectedGameMasters));
@@ -349,10 +349,10 @@ public class PlayerTests
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new());
@@ -390,10 +390,10 @@ public class PlayerTests
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new(Name: expectedPlayerName, GenreKeys: expectedPlayerGenreKeys, GameMasters: expectedGameMasters));
@@ -427,10 +427,10 @@ public class PlayerTests
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new());
@@ -614,10 +614,10 @@ public class PlayerTests
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new(Key: expectedPlayerKey, Name: expectedPlayerName, GameMasters: expectedGameMasters));
@@ -651,10 +651,10 @@ public class PlayerTests
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new());
@@ -693,10 +693,10 @@ public class PlayerTests
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new(Key: expectedPlayerKey, Name: expectedPlayerName, GenreKeys: expectedPlayerGenreKeys, GameMasters: expectedGameMasters));
@@ -730,10 +730,10 @@ public class PlayerTests
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
         expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new());
@@ -847,10 +847,10 @@ public class PlayerTests
         expectedPlayerKey = "Player 1";
         expectedPlayerName = "Unknown Player 1";
         expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new(Player: new(Key: expectedPlayerKey, Name: expectedPlayerName, GenreKeys: expectedPlayerGenreKeys, GameMasters: expectedGameMasters)));
@@ -884,10 +884,10 @@ public class PlayerTests
         expectedPlayerKey = "Player 1";
         expectedPlayerName = "Unknown Player 1";
         expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new());
@@ -1048,10 +1048,10 @@ public class PlayerTests
     {
         expectedPlayerKey = IPlayer.DefaultKey;
         expectedPlayerName = IPlayer.DefaultName;
-        expectedGameMasters = [
-            new(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys),
-            new(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IPlayer.DefaultCampaignKeys, GenreKeys: IPlayer.DefaultGenreKeys)
-            ];
+        expectedGameMasters = new GameMasters((GameMaster[])[
+            new GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
         Assert.DoesNotThrow(() => Player = new());
         Assert.That(Player, Is.InstanceOf<Player>());
         Assert.That(Player, Is.Not.Null);

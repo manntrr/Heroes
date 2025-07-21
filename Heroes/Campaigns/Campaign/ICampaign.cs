@@ -1,5 +1,6 @@
 using Heroes.Genres;
 using Heroes.GameMasters;
+using Heroes.GameMasters.GameMaster;
 
 namespace Heroes.Campaigns.Campaign;
 
@@ -11,7 +12,13 @@ public interface ICampaign
     static public String DefaultKey = UnknownString + " " + CampaignString + " " + KeyString;
     static public String DefaultName = UnknownString + " " + CampaignString;
     static public GenreKeySet DefaultGenreKeys = new(Genres: new Genres.Genres(IGenres.GENRES["Unknown"]), ref IGenres.GENRES);
-    static public GameMasters.GameMasters DefaultGameMasters = new GameMasters.GameMasters();
+    static public GameMasters.GameMasters DefaultGameMasters = new GameMasters.GameMasters(IGameMasters.GAME_MASTERS["Unknown GameMaster"]);
+    /*
+     new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
+            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
+            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
+            ]);
+    /**/
 
     static public void INIT(ICampaign Campaign)
     {
