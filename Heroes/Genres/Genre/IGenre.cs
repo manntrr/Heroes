@@ -1,3 +1,8 @@
+using Heroes.Campaigns;
+using Heroes.Campaigns.Campaign;
+using Heroes.GameMasters;
+using Heroes.GameMasters.GameMaster.Players;
+
 namespace Heroes.Genres.Genre;
 
 public interface IGenre
@@ -29,6 +34,39 @@ public interface IGenre
     {
         INIT(Genre: Genre, Key: Original.Key, Name: Original.Name);
     }
+    static public CampaignKeySet CAMPAIGN_KEYS(IGenre Genre, Heroes Heroes)
+    {
+        Campaigns.Campaigns temp = new();
+        Campaigns.Campaigns campaigns = new();
+        campaigns.Clear();
+        foreach (KeyValuePair<string, Campaign> pair in Heroes.Campaigns)
+        {
+            if (pair.Value.GenreKeys.Contains(Genre.Key)) campaigns.Add(pair.Value);
+        }
+        return new(campaigns, ref temp);
+    }
+    static public PlayerKeySet PLAYER_KEYS(IGenre Genre, Heroes Heroes)
+    {
+        GameMasters.GameMaster.Players.Players temp = new();
+        GameMasters.GameMaster.Players.Players players = new();
+        players.Clear();
+        foreach (KeyValuePair<string, GameMasters.GameMaster.Players.Player.Player> pair in Heroes.Players)
+        {
+            if (pair.Value.GenreKeys.Contains(Genre.Key)) players.Add(pair.Value);
+        }
+        return new(players, ref temp);
+    }
+    static public GameMasterKeySet GAME_MASTER_KEYS(IGenre Genre, Heroes Heroes)
+    {
+        GameMasters.GameMasters temp = new();
+        GameMasters.GameMasters gameMasters = new();
+        gameMasters.Clear();
+        foreach (KeyValuePair<string, GameMasters.GameMaster.GameMaster> pair in Heroes.GameMasters)
+        {
+            if (pair.Value.GenreKeys.Contains(Genre.Key)) gameMasters.Add(pair.Value);
+        }
+        return new(gameMasters, ref temp);
+    }
     public String Key { get; set; }
     public String Name { get; set; }
     public void Init();
@@ -37,4 +75,7 @@ public interface IGenre
     public void Init(int Index);
     public void Init(IGenre Genre);
     public void Init(Genre Genre);
+    public CampaignKeySet CampaignKeys(Heroes Heroes);
+    public PlayerKeySet PlayerKeys(Heroes Heroes);
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes);
 }

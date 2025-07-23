@@ -24,7 +24,7 @@ public class GameMastersTests
     public void NullConstructorTest()
     {
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> { { expectedGameMasterKeys[0], "Unknown GameMaster 1" } };
         Assert.DoesNotThrow(() => GameMasters = new());
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
@@ -42,13 +42,13 @@ public class GameMastersTests
     public void NullInitializorTest()
     {
         expectedSetupGameMasterCount = 2;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" } };
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
-        expectedGameMasterNames = new Dictionary<String, String> { { expectedGameMasterKeys[0], "Unknown GameMaster 1" } };
+        expectedGameMasterKeys = ["Game Master 1"];
+        expectedGameMasterNames = new Dictionary<String, String> { { expectedGameMasterKeys[0], "Unknown Game Master 1" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -76,10 +76,10 @@ public class GameMastersTests
     public void GeneratedCountConstructorTest()
     {
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster 2" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedGameMasterKeys[1], "Unknown Game Master 2" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -96,16 +96,16 @@ public class GameMastersTests
     public void GeneratedCountInitializorTest()
     {
         expectedSetupGameMasterCount = 3;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2", "GameMaster 3"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2", "Game Master 3"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" },
-            { expectedSetupGameMasterKeys[2], "Unknown GameMaster 3" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" },
+            { expectedSetupGameMasterKeys[2], "Unknown Game Master 3" } };
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster 2" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedGameMasterKeys[1], "Unknown Game Master 2" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -133,9 +133,9 @@ public class GameMastersTests
     public void GameMasterElementsConstructorTest()
     {
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Key: expectedGameMasterKeys[0], Name: expectedGameMasterNames[expectedGameMasterKeys[0]]));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -152,14 +152,14 @@ public class GameMastersTests
     public void GameMasterElementsInitializorTest()
     {
         expectedSetupGameMasterCount = 2;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" } };
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -187,9 +187,9 @@ public class GameMastersTests
     public void GameMasterKeyValuePairConstructorTest()
     {
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasterPair = new(key: expectedGameMasterKeys[0], value: new GameMaster.GameMaster(Key: expectedGameMasterKeys[0], Name: expectedGameMasterNames[expectedGameMasterKeys[0]])));
         Assert.That(GameMasterPair, Is.Not.Null);
         Assert.DoesNotThrow(() => GameMasters = new(GameMaster: (KeyValuePair<String, GameMaster.IGameMaster>)GameMasterPair));
@@ -208,14 +208,14 @@ public class GameMastersTests
     public void GameMasterKeyValuePairInitializorTest()
     {
         expectedSetupGameMasterCount = 2;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" } };
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -245,10 +245,10 @@ public class GameMastersTests
     public void GameMasterElementsDictionaryConstructorTest()
     {
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Dictionary: new Dictionary<string, string> {
             { expectedGameMasterKeys[0], expectedGameMasterNames[expectedGameMasterKeys[0]]},
             { expectedGameMasterKeys[1], expectedGameMasterNames[expectedGameMasterKeys[1]]}
@@ -268,16 +268,16 @@ public class GameMastersTests
     public void GameMasterElementsDictionaryInitializorTest()
     {
         expectedSetupGameMasterCount = 3;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2", "GameMaster 3"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2", "Game Master 3"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" },
-            { expectedSetupGameMasterKeys[2], "Unknown GameMaster 3" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" },
+            { expectedSetupGameMasterKeys[2], "Unknown Game Master 3" } };
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -308,9 +308,9 @@ public class GameMastersTests
     public void GameMasterConstructorTest()
     {
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(GameMaster: new GameMaster.GameMaster(Key: expectedGameMasterKeys[0], Name: expectedGameMasterNames[expectedGameMasterKeys[0]])));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -327,14 +327,14 @@ public class GameMastersTests
     public void GameMasterInitializorTest()
     {
         expectedSetupGameMasterCount = 2;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" } };
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -362,10 +362,10 @@ public class GameMastersTests
     public void GameMasterArrayConstructorTest()
     {
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Array: [
             new GameMaster.GameMaster(Key: expectedGameMasterKeys[0], Name: expectedGameMasterNames[expectedGameMasterKeys[0]]),
             new GameMaster.GameMaster(Key: expectedGameMasterKeys[1], Name: expectedGameMasterNames[expectedGameMasterKeys[1]])]));
@@ -384,16 +384,16 @@ public class GameMastersTests
     public void GameMasterArrayInitializorTest()
     {
         expectedSetupGameMasterCount = 3;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2", "GameMaster 3"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2", "Game Master 3"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" },
-            { expectedSetupGameMasterKeys[2], "Unknown GameMaster 3" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" },
+            { expectedSetupGameMasterKeys[2], "Unknown Game Master 3" } };
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -423,10 +423,10 @@ public class GameMastersTests
     public void GameMasterKeyValuePairArrayConstructorTest()
     {
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Array: new KeyValuePair<string, GameMaster.IGameMaster>[] {
             new KeyValuePair<string, GameMaster.IGameMaster>(
                 key: expectedGameMasterKeys[0],
@@ -451,16 +451,16 @@ public class GameMastersTests
     public void GameMasterKeyValuePairArrayInitializorTest()
     {
         expectedSetupGameMasterCount = 3;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2", "GameMaster 3"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2", "Game Master 3"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" },
-            { expectedSetupGameMasterKeys[2], "Unknown GameMaster 3" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" },
+            { expectedSetupGameMasterKeys[2], "Unknown Game Master 3" } };
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -496,10 +496,10 @@ public class GameMastersTests
     public void GameMasterDictionaryConstructorTest()
     {
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Dictionary: new Dictionary<string, GameMaster.GameMaster> {
             { expectedGameMasterKeys[0], new GameMaster.GameMaster(Key: expectedGameMasterKeys[0], Name: expectedGameMasterNames[expectedGameMasterKeys[0]])},
             { expectedGameMasterKeys[1], new GameMaster.GameMaster(Key: expectedGameMasterKeys[0], Name: expectedGameMasterNames[expectedGameMasterKeys[1]])}
@@ -519,16 +519,16 @@ public class GameMastersTests
     public void GameMasterDictionaryInitializorTest()
     {
         expectedSetupGameMasterCount = 3;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2", "GameMaster 3"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2", "Game Master 3"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" },
-            { expectedSetupGameMasterKeys[2], "Unknown GameMaster 3" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" },
+            { expectedSetupGameMasterKeys[2], "Unknown Game Master 3" } };
         expectedGameMasterCount = 2;
-        expectedGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -559,9 +559,9 @@ public class GameMastersTests
     public void CopyConstructorTest()
     {
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Original: new GameMasters(Key: expectedGameMasterKeys[0], Name: expectedGameMasterNames[expectedGameMasterKeys[0]])));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -578,14 +578,14 @@ public class GameMastersTests
     public void CopyInitializorTest()
     {
         expectedSetupGameMasterCount = 2;
-        expectedSetupGameMasterKeys = ["GameMaster 1", "GameMaster 2"];
+        expectedSetupGameMasterKeys = ["Game Master 1", "Game Master 2"];
         expectedSetupGameMasterNames = new Dictionary<String, String> {
-            { expectedSetupGameMasterKeys[0], "Unknown GameMaster 1" },
-            { expectedSetupGameMasterKeys[1], "Unknown GameMaster 2" } };
+            { expectedSetupGameMasterKeys[0], "Unknown Game Master 1" },
+            { expectedSetupGameMasterKeys[1], "Unknown Game Master 2" } };
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         expectedGameMasterNames = new Dictionary<String, String> {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" } };
         Assert.DoesNotThrow(() => GameMasters = new(Count: (int)expectedSetupGameMasterCount));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -613,24 +613,24 @@ public class GameMastersTests
     public void DefaultGameMastersCollectionTest()
     {
         expectedGameMasterCount = 8;
-        expectedGameMasterKeys = ["Unknown GameMaster",
-        "Unknown Fantasy GameMaster",
-        "Unknown Western GameMaster",
-        "Unknown Pulp Fiction GameMaster",
-        "Unknown Modern GameMaster",
-        "Unknown Star Hero GameMaster",
-        "Unknown Champions GameMaster",
-        "Unknown Custom GameMaster"];
+        expectedGameMasterKeys = ["Unknown Game Master",
+        "Unknown Fantasy Game Master",
+        "Unknown Western Game Master",
+        "Unknown Pulp Fiction Game Master",
+        "Unknown Modern Game Master",
+        "Unknown Star Hero Game Master",
+        "Unknown Champions Game Master",
+        "Unknown Custom Game Master"];
         expectedGameMasterNames = new()
         {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown Fantasy GameMaster" },
-            { expectedGameMasterKeys[2], "Unknown Western GameMaster" },
-            { expectedGameMasterKeys[3], "Unknown Pulp Fiction GameMaster" },
-            { expectedGameMasterKeys[4], "Unknown Modern GameMaster" },
-            { expectedGameMasterKeys[5], "Unknown Star Hero GameMaster" },
-            { expectedGameMasterKeys[6], "Unknown Champions GameMaster" },
-            { expectedGameMasterKeys[7], "Unknown Custom GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Fantasy Game Master" },
+            { expectedGameMasterKeys[2], "Unknown Western Game Master" },
+            { expectedGameMasterKeys[3], "Unknown Pulp Fiction Game Master" },
+            { expectedGameMasterKeys[4], "Unknown Modern Game Master" },
+            { expectedGameMasterKeys[5], "Unknown Star Hero Game Master" },
+            { expectedGameMasterKeys[6], "Unknown Champions Game Master" },
+            { expectedGameMasterKeys[7], "Unknown Custom Game Master" } };
         Assert.That(IGameMasters.GAME_MASTERS, Is.InstanceOf<GameMasters>());
         Assert.That(IGameMasters.GAME_MASTERS, Is.Not.Null);
         Assert.That(IGameMasters.GAME_MASTERS.Count, Is.EqualTo(expectedGameMasterCount));
@@ -645,7 +645,7 @@ public class GameMastersTests
     [Test]
     public void GameMasterKeySetConstructorTest()
     {
-        expectedGameMasterKeys = ["Unknown GameMaster", "Unknown Fantasy GameMaster", "Unknown Western GameMaster", "Unknown Pulp Fiction GameMaster", "Unknown Modern GameMaster", "Unknown Star Hero GameMaster", "Unknown Champions GameMaster", "Unknown Custom GameMaster"];
+        expectedGameMasterKeys = ["Unknown Game Master", "Unknown Fantasy Game Master", "Unknown Western Game Master", "Unknown Pulp Fiction Game Master", "Unknown Modern Game Master", "Unknown Star Hero Game Master", "Unknown Champions Game Master", "Unknown Custom Game Master"];
         Assert.DoesNotThrow(() => GameMasterKeySet = new(IGameMasters.GAME_MASTERS, ref IGameMasters.GAME_MASTERS));
         Assert.That(GameMasterKeySet, Is.InstanceOf<GameMasterKeySet>());
         Assert.That(GameMasterKeySet, Is.Not.Null);
@@ -658,7 +658,7 @@ public class GameMastersTests
     [Test]
     public void GameMasterKeySetConstructorReturnTest()
     {
-        expectedGameMasterKeys = ["Unknown GameMaster", "Unknown Fantasy GameMaster", "Unknown Western GameMaster", "Unknown Pulp Fiction GameMaster", "Unknown Modern GameMaster", "Unknown Star Hero GameMaster", "Unknown Champions GameMaster", "Unknown Custom GameMaster"];
+        expectedGameMasterKeys = ["Unknown Game Master", "Unknown Fantasy Game Master", "Unknown Western Game Master", "Unknown Pulp Fiction Game Master", "Unknown Modern Game Master", "Unknown Star Hero Game Master", "Unknown Champions Game Master", "Unknown Custom Game Master"];
         Assert.DoesNotThrow(() => GameMasters = new());
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -686,7 +686,7 @@ public class GameMastersTests
     [Test]
     public void CopyGameMasterKeySetConstructorTest()
     {
-        expectedGameMasterKeys = ["Unknown GameMaster", "Unknown Fantasy GameMaster", "Unknown Western GameMaster", "Unknown Pulp Fiction GameMaster", "Unknown Modern GameMaster", "Unknown Star Hero GameMaster", "Unknown Champions GameMaster", "Unknown Custom GameMaster"];
+        expectedGameMasterKeys = ["Unknown Game Master", "Unknown Fantasy Game Master", "Unknown Western Game Master", "Unknown Pulp Fiction Game Master", "Unknown Modern Game Master", "Unknown Star Hero Game Master", "Unknown Champions Game Master", "Unknown Custom Game Master"];
         Assert.DoesNotThrow(() => GameMasterKeySet = new(Original: new GameMasterKeySet(IGameMasters.GAME_MASTERS, ref IGameMasters.GAME_MASTERS)));
         Assert.That(GameMasterKeySet, Is.InstanceOf<GameMasterKeySet>());
         Assert.That(GameMasterKeySet, Is.Not.Null);
@@ -702,24 +702,24 @@ public class GameMastersTests
     public void GameMastersAccessorTest()
     {
         expectedGameMasterCount = 8;
-        expectedGameMasterKeys = ["Unknown GameMaster",
-        "Unknown Fantasy GameMaster",
-        "Unknown Western GameMaster",
-        "Unknown Pulp Fiction GameMaster",
-        "Unknown Modern GameMaster",
-        "Unknown Star Hero GameMaster",
-        "Unknown Champions GameMaster",
-        "Unknown Custom GameMaster"];
+        expectedGameMasterKeys = ["Unknown Game Master",
+        "Unknown Fantasy Game Master",
+        "Unknown Western Game Master",
+        "Unknown Pulp Fiction Game Master",
+        "Unknown Modern Game Master",
+        "Unknown Star Hero Game Master",
+        "Unknown Champions Game Master",
+        "Unknown Custom Game Master"];
         expectedGameMasterNames = new()
         {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown Fantasy GameMaster" },
-            { expectedGameMasterKeys[2], "Unknown Western GameMaster" },
-            { expectedGameMasterKeys[3], "Unknown Pulp Fiction GameMaster" },
-            { expectedGameMasterKeys[4], "Unknown Modern GameMaster" },
-            { expectedGameMasterKeys[5], "Unknown Star Hero GameMaster" },
-            { expectedGameMasterKeys[6], "Unknown Champions GameMaster" },
-            { expectedGameMasterKeys[7], "Unknown Custom GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Fantasy Game Master" },
+            { expectedGameMasterKeys[2], "Unknown Western Game Master" },
+            { expectedGameMasterKeys[3], "Unknown Pulp Fiction Game Master" },
+            { expectedGameMasterKeys[4], "Unknown Modern Game Master" },
+            { expectedGameMasterKeys[5], "Unknown Star Hero Game Master" },
+            { expectedGameMasterKeys[6], "Unknown Champions Game Master" },
+            { expectedGameMasterKeys[7], "Unknown Custom Game Master" } };
         Assert.DoesNotThrow(() => GameMasterKeySet = new(IGameMasters.GAME_MASTERS, ref IGameMasters.GAME_MASTERS));
         Assert.That(GameMasterKeySet, Is.InstanceOf<GameMasterKeySet>());
         Assert.That(GameMasterKeySet, Is.Not.Null);
@@ -739,54 +739,54 @@ public class GameMastersTests
     public void GameMastersAccessorWithMissingThrownTest()
     {
         expectedGameMasterCount = 7;
-        expectedGameMasterKeys = ["Unknown GameMaster",
-        "Unknown Fantasy GameMaster",
-        "Unknown Western GameMaster",
-        "Unknown Pulp Fiction GameMaster",
-        "Unknown Modern GameMaster",
-        "Unknown Star Hero GameMaster",
-        "Unknown Champions GameMaster"];
+        expectedGameMasterKeys = ["Unknown Game Master",
+        "Unknown Fantasy Game Master",
+        "Unknown Western Game Master",
+        "Unknown Pulp Fiction Game Master",
+        "Unknown Modern Game Master",
+        "Unknown Star Hero Game Master",
+        "Unknown Champions Game Master"];
         expectedGameMasterNames = new()
         {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown Fantasy GameMaster" },
-            { expectedGameMasterKeys[2], "Unknown Western GameMaster" },
-            { expectedGameMasterKeys[3], "Unknown Pulp Fiction GameMaster" },
-            { expectedGameMasterKeys[4], "Unknown Modern GameMaster" },
-            { expectedGameMasterKeys[5], "Unknown Star Hero GameMaster" },
-            { expectedGameMasterKeys[6], "Unknown Champions GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Fantasy Game Master" },
+            { expectedGameMasterKeys[2], "Unknown Western Game Master" },
+            { expectedGameMasterKeys[3], "Unknown Pulp Fiction Game Master" },
+            { expectedGameMasterKeys[4], "Unknown Modern Game Master" },
+            { expectedGameMasterKeys[5], "Unknown Star Hero Game Master" },
+            { expectedGameMasterKeys[6], "Unknown Champions Game Master" } };
         Assert.DoesNotThrow(() => GameMasterKeySet = new(IGameMasters.GAME_MASTERS, ref IGameMasters.GAME_MASTERS));
         Assert.That(GameMasterKeySet, Is.InstanceOf<GameMasterKeySet>());
         Assert.That(GameMasterKeySet, Is.Not.Null);
         GameMasters missing = new(Original: IGameMasters.GAME_MASTERS);
-        missing.Remove("Unknown Custom GameMaster");
+        missing.Remove("Unknown Custom Game Master");
         Assert.Throws<ArgumentOutOfRangeException>(() => GameMasters = GameMasterKeySet.GameMasters(missing));
     }
     [Test]
     public void GameMastersAccessorWithMissingNotThrownTest()
     {
         expectedGameMasterCount = 7;
-        expectedGameMasterKeys = ["Unknown GameMaster",
-        "Unknown Fantasy GameMaster",
-        "Unknown Western GameMaster",
-        "Unknown Pulp Fiction GameMaster",
-        "Unknown Modern GameMaster",
-        "Unknown Star Hero GameMaster",
-        "Unknown Champions GameMaster"];
+        expectedGameMasterKeys = ["Unknown Game Master",
+        "Unknown Fantasy Game Master",
+        "Unknown Western Game Master",
+        "Unknown Pulp Fiction Game Master",
+        "Unknown Modern Game Master",
+        "Unknown Star Hero Game Master",
+        "Unknown Champions Game Master"];
         expectedGameMasterNames = new()
         {
-            { expectedGameMasterKeys[0], "Unknown GameMaster" },
-            { expectedGameMasterKeys[1], "Unknown Fantasy GameMaster" },
-            { expectedGameMasterKeys[2], "Unknown Western GameMaster" },
-            { expectedGameMasterKeys[3], "Unknown Pulp Fiction GameMaster" },
-            { expectedGameMasterKeys[4], "Unknown Modern GameMaster" },
-            { expectedGameMasterKeys[5], "Unknown Star Hero GameMaster" },
-            { expectedGameMasterKeys[6], "Unknown Champions GameMaster" } };
+            { expectedGameMasterKeys[0], "Unknown Game Master" },
+            { expectedGameMasterKeys[1], "Unknown Fantasy Game Master" },
+            { expectedGameMasterKeys[2], "Unknown Western Game Master" },
+            { expectedGameMasterKeys[3], "Unknown Pulp Fiction Game Master" },
+            { expectedGameMasterKeys[4], "Unknown Modern Game Master" },
+            { expectedGameMasterKeys[5], "Unknown Star Hero Game Master" },
+            { expectedGameMasterKeys[6], "Unknown Champions Game Master" } };
         Assert.DoesNotThrow(() => GameMasterKeySet = new(IGameMasters.GAME_MASTERS, ref IGameMasters.GAME_MASTERS));
         Assert.That(GameMasterKeySet, Is.InstanceOf<GameMasterKeySet>());
         Assert.That(GameMasterKeySet, Is.Not.Null);
         GameMasters missing = new(Original: IGameMasters.GAME_MASTERS);
-        missing.Remove("Unknown Custom GameMaster");
+        missing.Remove("Unknown Custom Game Master");
         Assert.DoesNotThrow(() => GameMasters = GameMasterKeySet.GameMasters(missing, false));
         Assert.That(GameMasters, Is.InstanceOf<GameMasters>());
         Assert.That(GameMasters, Is.Not.Null);
@@ -803,7 +803,7 @@ public class GameMastersTests
     public void KeysAccessorTest()
     {
         expectedGameMasterCount = 1;
-        expectedGameMasterKeys = ["GameMaster 1"];
+        expectedGameMasterKeys = ["Game Master 1"];
         Assert.DoesNotThrow(() => GameMasterKeySet = new(new(), ref IGameMasters.GAME_MASTERS));
         Assert.That(GameMasterKeySet, Is.InstanceOf<GameMasterKeySet>());
         Assert.That(GameMasterKeySet, Is.Not.Null);

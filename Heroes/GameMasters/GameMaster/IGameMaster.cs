@@ -1,12 +1,13 @@
 using Heroes.Genres;
 using Heroes.Campaigns;
 using Heroes.GameMasters.GameMaster.Players.Player;
+using Heroes.GameMasters.GameMaster.Players;
 
 namespace Heroes.GameMasters.GameMaster;
 
 public interface IGameMaster : IPlayer
 {
-    static public String GameMasterString = "GameMaster";
+    static public String GameMasterString = "Game Master";
     static new public String KeyString = "Key";
     static new public String UnknownString = "Unknown";
     static new public String DefaultKey = UnknownString + " " + GameMasterString + " " + KeyString;
@@ -14,8 +15,7 @@ public interface IGameMaster : IPlayer
 
     static new public CampaignKeySet DefaultCampaignKeys = new(Campaigns: new Campaigns.Campaigns(ICampaigns.CAMPAIGNS["Unknown Campaign"]), ref ICampaigns.CAMPAIGNS);
     static new public GenreKeySet DefaultGenreKeys = new(Genres: new Genres.Genres(IGenres.GENRES["Unknown"]), ref IGenres.GENRES);
-    // TODO: update to Game Master Keys
-    static new public GameMasters DefaultGameMasters = new GameMasters();
+    static public PlayerKeySet DefaultPlayerKeys = new(Players: new Players.Players(IPlayers.PLAYERS["Unknown Player"]), ref IPlayers.PLAYERS);
 
     static public void INIT(IGameMaster GameMaster)
     {
@@ -23,15 +23,15 @@ public interface IGameMaster : IPlayer
         GameMaster.Name = DefaultName;
         GameMaster.CampaignKeys = DefaultCampaignKeys;
         GameMaster.GenreKeys = DefaultGenreKeys;
-        GameMaster.GameMasters = DefaultGameMasters;
+        GameMaster.PlayerKeys = DefaultPlayerKeys;
     }
     static public void INIT(IGameMaster GameMaster, String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null)
     {
         INIT(GameMaster: GameMaster, Key: Name + " " + KeyString, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
     }
-    static protected void INIT(IGameMaster GameMaster, String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null)
+    static public void INIT(IGameMaster GameMaster, String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null)
     {
-        INIT(GameMaster: GameMaster, Key: Name + " " + KeyString, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, GameMasters: GameMasters);
+        INIT(GameMaster: GameMaster, Key: Name + " " + KeyString, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, PlayerKeys: PlayerKeys);
     }
     static public void INIT(IGameMaster GameMaster, String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null)
     {
@@ -39,16 +39,15 @@ public interface IGameMaster : IPlayer
         if (Name is not null) GameMaster.Name = Name;
         if (CampaignKeys is not null) GameMaster.CampaignKeys = CampaignKeys;
         if (GenreKeys is not null) GameMaster.GenreKeys = GenreKeys;
-        //TODO:  fix this to use GameMasterKeys
-        GameMaster.GameMasters = [];
+        GameMaster.PlayerKeys = IGameMaster.DefaultPlayerKeys;
     }
-    static protected void INIT(IGameMaster GameMaster, String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null)
+    static public void INIT(IGameMaster GameMaster, String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null)
     {
         GameMaster.Key = Key;
         if (Name is not null) GameMaster.Name = Name;
         if (CampaignKeys is not null) GameMaster.CampaignKeys = CampaignKeys;
         if (GenreKeys is not null) GameMaster.GenreKeys = GenreKeys;
-        if (GameMasters is not null) GameMaster.GameMasters = GameMasters;
+        if (PlayerKeys is not null) GameMaster.PlayerKeys = PlayerKeys;
     }
     static public void INIT(IGameMaster GameMaster, int Index)
     {
@@ -56,19 +55,18 @@ public interface IGameMaster : IPlayer
     }
     static public void INIT(IGameMaster GameMaster, IGameMaster Original)
     {
-        INIT(GameMaster: GameMaster, Key: Original.Key, Name: Original.Name, CampaignKeys: Original.CampaignKeys, GenreKeys: Original.GenreKeys, GameMasters: Original.GameMasters);
+        INIT(GameMaster: GameMaster, Key: Original.Key, Name: Original.Name, CampaignKeys: Original.CampaignKeys, GenreKeys: Original.GenreKeys, PlayerKeys: Original.PlayerKeys);
     }
     public new String Key { get; set; }
     public new String Name { get; set; }
     public new CampaignKeySet CampaignKeys { get; set; }
     public new GenreKeySet GenreKeys { get; set; }
-    // TODO:  update to Game Masters Keys
-    protected new GameMasters GameMasters { get; set; }
+    public PlayerKeySet PlayerKeys { get; set; }
     public new void Init();
-    public void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null);
-    protected new void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null);
-    public void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null);
-    protected new void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null);
+    public new void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null);
+    public void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null);
+    public new void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null);
+    public void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null);
     public new void Init(int Index);
     public void Init(IGameMaster GameMaster);
     public void Init(GameMaster GameMaster);

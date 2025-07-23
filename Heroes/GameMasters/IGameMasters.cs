@@ -5,14 +5,14 @@ namespace Heroes.GameMasters;
 public interface IGameMasters : IDictionary<String, GameMaster.IGameMaster>
 {
     static public GameMasters GAME_MASTERS = (GameMasters)CONVERT_DICTIONARY_TO_GAME_MASTERS(new Dictionary<String, GameMaster.IGameMaster> {
-        { "Unknown GameMaster", new GameMaster.GameMaster(Key: "Unknown GameMaster", Name: "Unknown GameMaster") },
-        { "Unknown Fantasy GameMaster", new GameMaster.GameMaster(Key: "Unknown Fantasy GameMaster", Name: "Unknown Fantasy GameMaster") },
-        { "Unknown Western GameMaster", new GameMaster.GameMaster(Key: "Unknown Western GameMaster", Name: "Unknown Western GameMaster") },
-        { "Unknown Pulp Fiction GameMaster", new GameMaster.GameMaster(Key: "Unknown Pulp Fiction GameMaster", Name: "Unknown Pulp Fiction GameMaster") },
-        { "Unknown Modern GameMaster", new GameMaster.GameMaster(Key: "Unknown Modern GameMaster", Name: "Unknown Modern GameMaster") },
-        { "Unknown Star Hero GameMaster", new GameMaster.GameMaster(Key: "Unknown Star Hero GameMaster", Name: "Unknown Star Hero GameMaster") },
-        { "Unknown Champions GameMaster", new GameMaster.GameMaster(Key: "Unknown Champions GameMaster", Name: "Unknown Champions GameMaster") },
-        { "Unknown Custom GameMaster", new GameMaster.GameMaster(Key: "Unknown Custom GameMaster", Name: "Unknown Custom GameMaster") }
+        { "Unknown Game Master", new GameMaster.GameMaster(Key: "Unknown Game Master", Name: "Unknown Game Master") },
+        { "Unknown Fantasy Game Master", new GameMaster.GameMaster(Key: "Unknown Fantasy Game Master", Name: "Unknown Fantasy Game Master") },
+        { "Unknown Western Game Master", new GameMaster.GameMaster(Key: "Unknown Western Game Master", Name: "Unknown Western Game Master") },
+        { "Unknown Pulp Fiction Game Master", new GameMaster.GameMaster(Key: "Unknown Pulp Fiction Game Master", Name: "Unknown Pulp Fiction Game Master") },
+        { "Unknown Modern Game Master", new GameMaster.GameMaster(Key: "Unknown Modern Game Master", Name: "Unknown Modern Game Master") },
+        { "Unknown Star Hero Game Master", new GameMaster.GameMaster(Key: "Unknown Star Hero Game Master", Name: "Unknown Star Hero Game Master") },
+        { "Unknown Champions Game Master", new GameMaster.GameMaster(Key: "Unknown Champions Game Master", Name: "Unknown Champions Game Master") },
+        { "Unknown Custom Game Master", new GameMaster.GameMaster(Key: "Unknown Custom Game Master", Name: "Unknown Custom Game Master") }
     });
     static public ICollection<string> KEYS(Dictionary<String, GameMaster.IGameMaster> GameMasters)
     {

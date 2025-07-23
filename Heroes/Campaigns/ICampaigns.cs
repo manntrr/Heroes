@@ -1,4 +1,6 @@
 using Heroes.Campaigns.Campaign;
+using Heroes.GameMasters;
+using Heroes.GameMasters.GameMaster.Players;
 
 namespace Heroes.Campaigns;
 
@@ -177,6 +179,28 @@ public interface ICampaigns : IDictionary<String, Campaign.ICampaign>
         if (Campaigns.ContainsKey(Campaign.Key)) Campaigns[Campaign.Key] = Campaign;
         else Campaigns.Add(key: Campaign.Key, value: Campaign);
     }
+    static public PlayerKeySet PLAYER_KEYS(ICampaigns Campaigns, Heroes Heroes)
+    {
+        GameMasters.GameMaster.Players.Players temp = new();
+        GameMasters.GameMaster.Players.PlayerKeySet players = new(new(), ref temp);
+        players.Clear();
+        foreach (KeyValuePair<string, ICampaign> pair in Campaigns)
+        {
+            players.Union(pair.Value.PlayerKeys(Heroes));
+        }
+        return players;
+    }
+    static public GameMasterKeySet GAME_MASTER_KEYS(ICampaigns Campaigns, Heroes Heroes)
+    {
+        GameMasters.GameMasters temp = new();
+        GameMasters.GameMasterKeySet gameMasters = new(new(), ref temp);
+        gameMasters.Clear();
+        foreach (KeyValuePair<string, ICampaign> pair in Campaigns)
+        {
+            gameMasters.Union(pair.Value.GameMasterKeys(Heroes));
+        }
+        return gameMasters;
+    }
     public void Init(int count = 1);
     public void Init(String Key, String Name);
     public void Init(Campaign.ICampaign Campaign);
@@ -188,4 +212,6 @@ public interface ICampaigns : IDictionary<String, Campaign.ICampaign>
     public void Init(Dictionary<String, Campaign.Campaign> Dictionary);
     public void Init(ICampaigns Original);
     public void Add(Campaign.ICampaign Campaign);
+    public PlayerKeySet PlayerKeys(Heroes Heroes);
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes);
 }

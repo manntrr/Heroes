@@ -1,5 +1,6 @@
 ﻿using Heroes.GameMasters;
 using Heroes.GameMasters.GameMaster;
+using Heroes.GameMasters.GameMaster.Players;
 using Heroes.GameMasters.GameMaster.Players.Player;
 using Heroes.Genres;
 using NUnit.Framework;
@@ -8,16 +9,31 @@ namespace Heroes.Campaigns.Campaign;
 
 public class CampaignTests
 {
+    Heroes? heroes = null;
     Campaign? Campaign = null;
     int? givenIndex = null;
     String? expectedCampaignKey = null;
     String? expectedCampaignName = null;
     GenreKeySet? expectedCampaignGenreKeys = null;
     Genres.Genres? expectedCampaignGenres = null;
-    GameMasters.GameMasters? expectedGameMasters = null;
+    //expectedPlayerKeys = new(Players: new([IPlayers.PLAYERS["Unknown Player"]]), MasterPlayers: ref IPlayers.PLAYERS);
+    GameMasters.GameMaster.Players.PlayerKeySet? expectedPlayerKeys = null;
+    //expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Unknown Game Master"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+    GameMasters.GameMasterKeySet? expectedGameMasterKeys = null;
     [SetUp]
     public void Setup()
     {
+        Assert.DoesNotThrow(() => heroes = new());
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => expectedPlayerKeys = new(Players: new(), MasterPlayers: ref IPlayers.PLAYERS/*heroes.Players*/));
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.InstanceOf<PlayerKeySet>());
+        Assert.DoesNotThrow(() => expectedPlayerKeys.Clear());
+        Assert.DoesNotThrow(() => expectedGameMasterKeys = new(GameMasters: new(), MasterGameMasters: ref IGameMasters.GAME_MASTERS/*heroes.GameMasters*/));
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.InstanceOf<GameMasterKeySet>());
+        Assert.DoesNotThrow(() => expectedGameMasterKeys.Clear());
     }
 
     [Test]
@@ -26,7 +42,9 @@ public class CampaignTests
         expectedCampaignKey = ICampaign.DefaultKey;
         expectedCampaignName = ICampaign.DefaultName;
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -46,12 +64,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -60,7 +81,9 @@ public class CampaignTests
         expectedCampaignKey = ICampaign.DefaultKey;
         expectedCampaignName = ICampaign.DefaultName;
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new(Index: 1));
@@ -85,12 +108,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -99,7 +125,9 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = ICampaign.DefaultName;
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new(Key: expectedCampaignKey));
@@ -119,12 +147,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -133,7 +164,9 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = ICampaign.DefaultName;
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -157,12 +190,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -171,7 +207,9 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new(Name: expectedCampaignName));
@@ -191,12 +229,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -205,7 +246,9 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -229,12 +272,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -243,7 +289,9 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new(Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys));
@@ -263,12 +311,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -277,7 +328,9 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -301,12 +354,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -315,13 +371,12 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
-        Assert.DoesNotThrow(() => Campaign = new(Name: expectedCampaignName, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign = new(Name: expectedCampaignName));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -338,12 +393,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -352,17 +410,16 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Name, Is.Not.EqualTo(expectedCampaignName));
-        Assert.DoesNotThrow(() => Campaign.Init(Name: expectedCampaignName, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign.Init(Name: expectedCampaignName));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -379,12 +436,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -393,13 +453,12 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
-        Assert.DoesNotThrow(() => Campaign = new(Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign = new(Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -416,12 +475,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -430,17 +492,16 @@ public class CampaignTests
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Name, Is.Not.EqualTo(expectedCampaignName));
-        Assert.DoesNotThrow(() => Campaign.Init(Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign.Init(Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -457,12 +518,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -471,7 +535,9 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new(Key: expectedCampaignKey, Name: expectedCampaignName));
@@ -491,12 +557,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -505,7 +574,9 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -530,12 +601,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -544,7 +618,9 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys));
@@ -564,12 +640,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -578,7 +657,9 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -603,12 +684,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -617,13 +701,12 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
-        Assert.DoesNotThrow(() => Campaign = new(Key: expectedCampaignKey, Name: expectedCampaignName, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign = new(Key: expectedCampaignKey, Name: expectedCampaignName));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -640,12 +723,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -654,10 +740,9 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -665,7 +750,7 @@ public class CampaignTests
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.Not.EqualTo(expectedCampaignKey));
         Assert.That(Campaign.Name, Is.Not.EqualTo(expectedCampaignName));
-        Assert.DoesNotThrow(() => Campaign.Init(Key: expectedCampaignKey, Name: expectedCampaignName, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign.Init(Key: expectedCampaignKey, Name: expectedCampaignName));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -682,12 +767,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -696,13 +784,12 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
-        Assert.DoesNotThrow(() => Campaign = new(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign = new(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -719,12 +806,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -733,10 +823,9 @@ public class CampaignTests
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -744,7 +833,7 @@ public class CampaignTests
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.Not.EqualTo(expectedCampaignKey));
         Assert.That(Campaign.Name, Is.Not.EqualTo(expectedCampaignName));
-        Assert.DoesNotThrow(() => Campaign.Init(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys, GameMasters: expectedGameMasters));
+        Assert.DoesNotThrow(() => Campaign.Init(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -761,12 +850,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -776,7 +868,11 @@ public class CampaignTests
         expectedCampaignKey = "Campaign 1";
         expectedCampaignName = "Unknown Campaign 1";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        expectedPlayerKeys = new(Players: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterPlayers: ref IPlayers.PLAYERS);
+        expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new(Index: (int)givenIndex));
@@ -796,12 +892,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -811,7 +910,11 @@ public class CampaignTests
         expectedCampaignKey = "Campaign 1";
         expectedCampaignName = "Unknown Campaign 1";
         expectedCampaignGenreKeys = ICampaign.DefaultGenreKeys;
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        expectedPlayerKeys = new(Players: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterPlayers: ref IPlayers.PLAYERS);
+        expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -836,12 +939,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -850,13 +956,14 @@ public class CampaignTests
         expectedCampaignKey = "Campaign 1";
         expectedCampaignName = "Unknown Campaign 1";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        expectedPlayerKeys = new(Players: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterPlayers: ref IPlayers.PLAYERS);
+        expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
-        Assert.DoesNotThrow(() => Campaign = new(Campaign: new(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys, GameMasters: expectedGameMasters)));
+        Assert.DoesNotThrow(() => Campaign = new(Campaign: new(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys)));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -873,12 +980,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -887,11 +997,11 @@ public class CampaignTests
         expectedCampaignKey = "Campaign 1";
         expectedCampaignName = "Unknown Campaign 1";
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 3", Name: "Game Master 3", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
+        expectedPlayerKeys = new(Players: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterPlayers: ref IPlayers.PLAYERS);
+        expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
@@ -899,7 +1009,7 @@ public class CampaignTests
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.Not.EqualTo(expectedCampaignKey));
         Assert.That(Campaign.Name, Is.Not.EqualTo(expectedCampaignName));
-        Assert.DoesNotThrow(() => Campaign.Init(Campaign: new(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys, GameMasters: expectedGameMasters)));
+        Assert.DoesNotThrow(() => Campaign.Init(Campaign: new(Key: expectedCampaignKey, Name: expectedCampaignName, GenreKeys: expectedCampaignGenreKeys)));
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
@@ -916,12 +1026,15 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -938,6 +1051,11 @@ public class CampaignTests
     {
         expectedCampaignKey = "Campaign 1";
         expectedCampaignName = ICampaign.DefaultName;
+        expectedPlayerKeys = new(Players: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterPlayers: ref IPlayers.PLAYERS);
+        expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
@@ -948,6 +1066,16 @@ public class CampaignTests
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
         Assert.That(Campaign.Name, Is.EqualTo(expectedCampaignName));
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
+        {
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void GetNameAccessorTest()
@@ -963,6 +1091,9 @@ public class CampaignTests
     {
         expectedCampaignKey = ICampaign.DefaultKey;
         expectedCampaignName = "Unknown Campaign 1";
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
@@ -973,6 +1104,16 @@ public class CampaignTests
         Assert.That(Campaign, Is.Not.Null);
         Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
         Assert.That(Campaign.Name, Is.EqualTo(expectedCampaignName));
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
+        {
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void GetGenresAccessorTest()
@@ -1001,6 +1142,9 @@ public class CampaignTests
     {
         expectedCampaignKey = ICampaign.DefaultKey;
         expectedCampaignName = ICampaign.DefaultName;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
@@ -1031,52 +1175,35 @@ public class CampaignTests
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Key, Is.EqualTo(expectedCampaignGenres[key].Key));
             Assert.That(Campaign.GenreKeys.Genres(IGenres.GENRES)[key].Name, Is.EqualTo(expectedCampaignGenres[key].Name));
         }
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
+        {
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
+        }
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void GetGameMastersAccessorTest()
     {
-        expectedGameMasters = ICampaign.DefaultGameMasters;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedPlayerKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());
         Assert.That(Campaign, Is.InstanceOf<Campaign>());
         Assert.That(Campaign, Is.Not.Null);
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
+        Assert.That(Campaign.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
+        foreach (String key in Campaign.PlayerKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
         }
-    }
-    [Test]
-    public void SetGameMastersAccessorTest()
-    {
-        expectedCampaignKey = ICampaign.DefaultKey;
-        expectedCampaignName = ICampaign.DefaultName;
-        expectedGameMasters = new GameMasters.GameMasters((GameMasters.GameMaster.GameMaster[])[
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 1", Name: "Game Master 1", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys),
-            new GameMasters.GameMaster.GameMaster(Key: "Game Master 2", Name: "Game Master 2", CampaignKeys: IGameMaster.DefaultCampaignKeys, GenreKeys: IGameMaster.DefaultGenreKeys)
-            ]);
-        Assert.DoesNotThrow(() => Campaign = new());
-        Assert.That(Campaign, Is.InstanceOf<Campaign>());
-        Assert.That(Campaign, Is.Not.Null);
-        Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
-        Assert.That(Campaign.Name, Is.EqualTo(expectedCampaignName));
-        Assert.That(Campaign.GenreKeys.Count, Is.Not.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GenreKeys.Keys)
+        Assert.That(Campaign.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Campaign.GameMasterKeys(heroes).Keys)
         {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.False);
-        }
-        Assert.DoesNotThrow(() => Campaign.GameMasters = expectedGameMasters);
-        Assert.That(Campaign, Is.InstanceOf<Campaign>());
-        Assert.That(Campaign, Is.Not.Null);
-        Assert.That(Campaign.Key, Is.EqualTo(expectedCampaignKey));
-        Assert.That(Campaign.Name, Is.EqualTo(expectedCampaignName));
-        Assert.That(Campaign.GameMasters.Count, Is.EqualTo(expectedGameMasters.Count));
-        foreach (String key in Campaign.GameMasters.Keys)
-        {
-            Assert.That(expectedGameMasters.ContainsKey(key), Is.True);
-            Assert.That(Campaign.GameMasters[key].Key, Is.EqualTo(expectedGameMasters[key].Key));
-            Assert.That(Campaign.GameMasters[key].Name, Is.EqualTo(expectedGameMasters[key].Name));
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
 }

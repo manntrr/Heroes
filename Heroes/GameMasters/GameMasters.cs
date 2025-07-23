@@ -2,15 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Heroes.GameMasters;
 
-/*
-public class GameMasters : Dictionary<String, GameMaster.GameMaster>
-{
-    public void Add(GameMaster.GameMaster gameMaster)
-    {
-        this.Add(gameMaster.Key, gameMaster);
-    }
-}
-/**/
 public class GameMasters : Dictionary<String, GameMaster.GameMaster>, IGameMasters
 {
     ICollection<string> IDictionary<string, GameMaster.IGameMaster>.Keys => IGameMasters.KEYS(GameMasters: this);

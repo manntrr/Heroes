@@ -1,4 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using Heroes.Campaigns;
+using Heroes.GameMasters;
+using Heroes.GameMasters.GameMaster.Players;
 using Heroes.Genres.Genre;
 using Microsoft.VisualBasic;
 
@@ -88,6 +91,9 @@ public class Genres : Dictionary<String, Genre.Genre>, IGenres
     public void Init(Dictionary<String, Genre.Genre> Dictionary) => IGenres.INIT(this, Dictionary: Dictionary);
     public void Init(IGenres Original) => IGenres.INIT(this, Original: Original);
     public void Add(IGenre genre) => IGenres.ADD(this, genre);
+    public CampaignKeySet CampaignKeys(Heroes Heroes) => IGenres.CAMPAIGN_KEYS(this, Heroes);
+    public PlayerKeySet PlayerKeys(Heroes Heroes) => IGenres.PLAYER_KEYS(this, Heroes);
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes) => IGenres.GAME_MASTER_KEYS(this, Heroes);
     public static implicit operator Dictionary<String, IGenre>(Genres Genres) => IGenres.CONVERT_GENRES_TO_DICTIONARY(Genres: Genres);
     public static explicit operator Genres(Dictionary<String, IGenre> Dictionary) => (Genres)IGenres.CONVERT_DICTIONARY_TO_GENRES(Dictionary: Dictionary);
 }

@@ -1,3 +1,6 @@
+using Heroes.Campaigns;
+using Heroes.GameMasters;
+using Heroes.GameMasters.GameMaster.Players;
 using Heroes.Genres.Genre;
 
 namespace Heroes.Genres;
@@ -178,6 +181,39 @@ public interface IGenres : IDictionary<String, IGenre>
         if (Genres.ContainsKey(genre.Key)) Genres[genre.Key] = genre;
         else Genres.Add(key: genre.Key, value: genre);
     }
+    static public CampaignKeySet CAMPAIGN_KEYS(IGenres Genres, Heroes Heroes)
+    {
+        Campaigns.Campaigns temp = new();
+        Campaigns.CampaignKeySet campaigns = new(new(), ref temp);
+        campaigns.Clear();
+        foreach (KeyValuePair<string, IGenre> pair in Genres)
+        {
+            campaigns.Union(pair.Value.CampaignKeys(Heroes));
+        }
+        return campaigns;
+    }
+    static public PlayerKeySet PLAYER_KEYS(IGenres Genres, Heroes Heroes)
+    {
+        GameMasters.GameMaster.Players.Players temp = new();
+        GameMasters.GameMaster.Players.PlayerKeySet players = new(new(), ref temp);
+        players.Clear();
+        foreach (KeyValuePair<string, IGenre> pair in Genres)
+        {
+            players.Union(pair.Value.PlayerKeys(Heroes));
+        }
+        return players;
+    }
+    static public GameMasterKeySet GAME_MASTER_KEYS(IGenres Genres, Heroes Heroes)
+    {
+        GameMasters.GameMasters temp = new();
+        GameMasters.GameMasterKeySet gameMasters = new(new(), ref temp);
+        gameMasters.Clear();
+        foreach (KeyValuePair<string, IGenre> pair in Genres)
+        {
+            gameMasters.Union(pair.Value.GameMasterKeys(Heroes));
+        }
+        return gameMasters;
+    }
     public void Init(int count = 1);
     public void Init(String Key, String Name);
     public void Init(IGenre Genre);
@@ -189,4 +225,7 @@ public interface IGenres : IDictionary<String, IGenre>
     public void Init(Dictionary<String, Genre.Genre> Dictionary);
     public void Init(IGenres Genres);
     public void Add(IGenre genre);
+    public CampaignKeySet CampaignKeys(Heroes Heroes);
+    public PlayerKeySet PlayerKeys(Heroes Heroes);
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes);
 }

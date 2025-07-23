@@ -1,4 +1,5 @@
 using Heroes.Campaigns;
+using Heroes.GameMasters.GameMaster.Players;
 using Heroes.GameMasters.GameMaster.Players.Player;
 using Heroes.Genres;
 
@@ -14,22 +15,20 @@ public class GameMaster : Players.Player.Player, IGameMaster
     // = IGameMaster.DefaultCampaignKeys;
     public new GenreKeySet GenreKeys { get => base.GenreKeys; set => base.GenreKeys = value; }
     // = IGameMaster.DefaultGenreKeys;
-    //TODO: change to GameMasterKeys
-    protected new GameMasters GameMasters { get => base.GameMasters; set => base.GameMasters = value; }
-    // = IGameMaster.DefaultGameMasters;
+    public PlayerKeySet PlayerKeys { get; set; } = IGameMaster.DefaultPlayerKeys;
     public GameMaster() => Init();
     public GameMaster(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null) => Init(Key: Key, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
-    protected GameMaster(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null) => Init(Key: Key, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, GameMasters: GameMasters);
-    public GameMaster(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null) => Init(Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, GameMasters: GameMasters);
-    protected GameMaster(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null) => Init(Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
+    public GameMaster(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null) => Init(Key: Key, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, PlayerKeys: PlayerKeys);
+    public GameMaster(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null) => Init(Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, PlayerKeys: PlayerKeys);
+    public GameMaster(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null) => Init(Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
     public GameMaster(int Index) => Init(Index: Index);
     public GameMaster(IGameMaster GameMaster) => Init(GameMaster: GameMaster);
     public GameMaster(GameMaster GameMaster) => Init(GameMaster: GameMaster);
     public new void Init() => IGameMaster.INIT(GameMaster: this);
-    public void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null) => IGameMaster.INIT(GameMaster: this, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
-    protected new void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null) => IGameMaster.INIT(GameMaster: this, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, GameMasters: GameMasters);
-    public void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null) => IGameMaster.INIT(GameMaster: this, Key: Key, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
-    protected new void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, GameMasters? GameMasters = null) => IGameMaster.INIT(GameMaster: this, Key: Key, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, GameMasters: GameMasters);
+    public new void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null) => IGameMaster.INIT(GameMaster: this, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
+    public void Init(String Name, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null) => IGameMaster.INIT(GameMaster: this, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, PlayerKeys: PlayerKeys);
+    public new void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null) => IGameMaster.INIT(GameMaster: this, Key: Key, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys);
+    public void Init(String Key, String? Name = null, CampaignKeySet? CampaignKeys = null, GenreKeySet? GenreKeys = null, PlayerKeySet? PlayerKeys = null) => IGameMaster.INIT(GameMaster: this, Key: Key, Name: Name, CampaignKeys: CampaignKeys, GenreKeys: GenreKeys, PlayerKeys: PlayerKeys);
     public new void Init(int Index) => IGameMaster.INIT(GameMaster: this, Index: Index);
     public void Init(IGameMaster GameMaster) => IGameMaster.INIT(GameMaster: this, Original: GameMaster);
     public void Init(GameMaster GameMaster) => IGameMaster.INIT(GameMaster: this, Original: GameMaster);

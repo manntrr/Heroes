@@ -1,3 +1,7 @@
+using Heroes.Campaigns;
+using Heroes.GameMasters;
+using Heroes.GameMasters.GameMaster.Players;
+
 namespace Heroes.Genres.Genre;
 
 public class Genre : IGenre
@@ -16,4 +20,7 @@ public class Genre : IGenre
     public void Init(int Index) => IGenre.INIT(Genre: this, Index: Index);
     public void Init(IGenre Genre) => IGenre.INIT(Genre: this, Original: Genre);
     public void Init(Genre Genre) => IGenre.INIT(Genre: this, Original: Genre);
+    public CampaignKeySet CampaignKeys(Heroes Heroes) => IGenre.CAMPAIGN_KEYS(this, Heroes);
+    public PlayerKeySet PlayerKeys(Heroes Heroes) => IGenre.PLAYER_KEYS(this, Heroes);
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes) => IGenre.GAME_MASTER_KEYS(this, Heroes);
 }

@@ -1,6 +1,8 @@
 namespace Heroes.Campaigns;
 
 using System.Diagnostics.CodeAnalysis;
+using global::Heroes.GameMasters;
+using global::Heroes.GameMasters.GameMaster.Players;
 using Microsoft.VisualBasic;
 
 public class Campaigns : Dictionary<String, Campaign.Campaign>, ICampaigns
@@ -87,6 +89,8 @@ public class Campaigns : Dictionary<String, Campaign.Campaign>, ICampaigns
     public void Init(Dictionary<String, Campaign.Campaign> Dictionary) => ICampaigns.INIT(this, Dictionary: Dictionary);
     public void Init(ICampaigns Original) => ICampaigns.INIT(this, Original: Original);
     public void Add(Campaign.ICampaign Campaign) => ICampaigns.ADD(this, Campaign);
+    public PlayerKeySet PlayerKeys(Heroes Heroes) => ICampaigns.PLAYER_KEYS(this, Heroes);
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes) => ICampaigns.GAME_MASTER_KEYS(this, Heroes);
     public static implicit operator Dictionary<String, Campaign.ICampaign>(Campaigns Campaigns) => ICampaigns.CONVERT_CAMPAIGNS_TO_DICTIONARY(Campaigns: Campaigns);
     public static explicit operator Campaigns(Dictionary<String, Campaign.ICampaign> Dictionary) => (Campaigns)ICampaigns.CONVERT_DICTIONARY_TO_CAMPAIGNS(Dictionary: Dictionary);
 }
