@@ -32,7 +32,7 @@ public class Heroes
             Campaigns.Campaigns campaigns = [];
             campaigns.Add(campaign);
             Campaigns.Campaigns temp = this.Campaigns;
-            GameMasters.GameMaster.GameMaster gameMaster = new(Key: "Game Master " + (counter + 1).ToString(), CampaignKeys: new CampaignKeySet(campaigns, ref temp), Name: "Unknown");
+            GameMasters.GameMaster.GameMaster gameMaster = new(Key: "Game Master " + (counter + 1).ToString(), Name: "Unknown", CampaignKeys: new CampaignKeySet(campaigns, ref temp), null, null);
             this.Players.Add(gameMaster.Key, gameMaster);
         }
         for (int counter = 0; counter < NonPlayerCharacters; counter++)
@@ -66,7 +66,7 @@ public class Heroes
             Campaigns.Campaigns campaigns = [];
             campaigns.Add(campaign);
             Campaigns.Campaigns temp = this.Campaigns;
-            GameMasters.GameMaster.Players.Player.Player player = new(Key: "Player " + (counter + 1).ToString(), Name: "Unknown", GameMasters: gameMasters, CampaignKeys: new CampaignKeySet(campaigns, ref temp));
+            GameMasters.GameMaster.Players.Player.Player player = new(Key: "Player " + (counter + 1).ToString(), Name: "Unknown", CampaignKeys: new CampaignKeySet(campaigns, ref temp));
             this.Players.Add(player.Key, player);
         }
         for (int counter = 0; counter < PlayerCharacters; counter++)

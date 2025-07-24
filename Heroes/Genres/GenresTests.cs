@@ -1050,12 +1050,13 @@ public class GenresTests
     [Test]
     public void GenreKeySetConstructorTest()
     {
+        Genres temp = new((IGenres)IGenres.GENRES);
         expectedGenreKeys = ["Unknown", "Fantasy", "Western", "Pulp Fiction", "Modern", "Star Hero", "Champions", "Custom"];
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedCampaignKeys, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genreKeySet = new(IGenres.GENRES, ref IGenres.GENRES));
+        Assert.DoesNotThrow(() => genreKeySet = new(IGenres.GENRES, ref temp));
         Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
         Assert.That(genreKeySet, Is.Not.Null);
         Assert.That(genreKeySet.Count, Is.EqualTo(expectedGenreKeys.Length));

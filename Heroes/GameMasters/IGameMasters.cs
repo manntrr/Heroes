@@ -5,14 +5,14 @@ namespace Heroes.GameMasters;
 public interface IGameMasters : IDictionary<String, GameMaster.IGameMaster>
 {
     static public GameMasters GAME_MASTERS = (GameMasters)CONVERT_DICTIONARY_TO_GAME_MASTERS(new Dictionary<String, GameMaster.IGameMaster> {
-        { "Unknown Game Master", new GameMaster.GameMaster(Key: "Unknown Game Master", Name: "Unknown Game Master") },
-        { "Unknown Fantasy Game Master", new GameMaster.GameMaster(Key: "Unknown Fantasy Game Master", Name: "Unknown Fantasy Game Master") },
-        { "Unknown Western Game Master", new GameMaster.GameMaster(Key: "Unknown Western Game Master", Name: "Unknown Western Game Master") },
-        { "Unknown Pulp Fiction Game Master", new GameMaster.GameMaster(Key: "Unknown Pulp Fiction Game Master", Name: "Unknown Pulp Fiction Game Master") },
-        { "Unknown Modern Game Master", new GameMaster.GameMaster(Key: "Unknown Modern Game Master", Name: "Unknown Modern Game Master") },
-        { "Unknown Star Hero Game Master", new GameMaster.GameMaster(Key: "Unknown Star Hero Game Master", Name: "Unknown Star Hero Game Master") },
-        { "Unknown Champions Game Master", new GameMaster.GameMaster(Key: "Unknown Champions Game Master", Name: "Unknown Champions Game Master") },
-        { "Unknown Custom Game Master", new GameMaster.GameMaster(Key: "Unknown Custom Game Master", Name: "Unknown Custom Game Master") }
+        { "Unknown Game Master", new GameMaster.GameMaster(Key: "Unknown Game Master", Name: "Unknown Game Master", null, null) },
+        { "Unknown Fantasy Game Master", new GameMaster.GameMaster(Key: "Unknown Fantasy Game Master", Name: "Unknown Fantasy Game Master", null, null) },
+        { "Unknown Western Game Master", new GameMaster.GameMaster(Key: "Unknown Western Game Master", Name: "Unknown Western Game Master", null, null) },
+        { "Unknown Pulp Fiction Game Master", new GameMaster.GameMaster(Key: "Unknown Pulp Fiction Game Master", Name: "Unknown Pulp Fiction Game Master", null, null) },
+        { "Unknown Modern Game Master", new GameMaster.GameMaster(Key: "Unknown Modern Game Master", Name: "Unknown Modern Game Master", null, null) },
+        { "Unknown Star Hero Game Master", new GameMaster.GameMaster(Key: "Unknown Star Hero Game Master", Name: "Unknown Star Hero Game Master", null, null) },
+        { "Unknown Champions Game Master", new GameMaster.GameMaster(Key: "Unknown Champions Game Master", Name: "Unknown Champions Game Master", null, null) },
+        { "Unknown Custom Game Master", new GameMaster.GameMaster(Key: "Unknown Custom Game Master", Name: "Unknown Custom Game Master", null, null) }
     });
     static public ICollection<string> KEYS(Dictionary<String, GameMaster.IGameMaster> GameMasters)
     {
@@ -112,7 +112,7 @@ public interface IGameMasters : IDictionary<String, GameMaster.IGameMaster>
     }
     static public void INIT(IGameMasters GameMasters, String Key, String Name)
     {
-        INIT(GameMasters: GameMasters, GameMaster: new GameMaster.GameMaster(Key: Key, Name: Name));
+        INIT(GameMasters: GameMasters, GameMaster: new GameMaster.GameMaster(Key: Key, Name: Name, null, null));
     }
     static public void INIT(IGameMasters GameMasters, GameMaster.IGameMaster GameMaster)
     {
@@ -120,11 +120,11 @@ public interface IGameMasters : IDictionary<String, GameMaster.IGameMaster>
     }
     static public void INIT(IGameMasters GameMasters, String Key, GameMaster.IGameMaster GameMaster)
     {
-        INIT(GameMasters: GameMasters, GameMaster: new GameMaster.GameMaster(Key: Key, Name: GameMaster.Name));
+        INIT(GameMasters: GameMasters, GameMaster: new GameMaster.GameMaster(Key: Key, Name: GameMaster.Name, null, null));
     }
     static public void INIT(IGameMasters GameMasters, KeyValuePair<String, GameMaster.IGameMaster> GameMaster)
     {
-        INIT(GameMasters: GameMasters, GameMaster: new GameMaster.GameMaster(Key: GameMaster.Key, Name: GameMaster.Value.Name));
+        INIT(GameMasters: GameMasters, GameMaster: new GameMaster.GameMaster(Key: GameMaster.Key, Name: GameMaster.Value.Name, null, null));
     }
     static public void INIT(IGameMasters GameMasters, GameMaster.IGameMaster[] GameMasterArray)
     {
@@ -152,7 +152,7 @@ public interface IGameMasters : IDictionary<String, GameMaster.IGameMaster>
             foreach (String key in GameMasters.Keys)
                 GameMasters.Remove(key);
         foreach (String key in Dictionary.Keys)
-            GameMasters.Add(new GameMaster.GameMaster(Key: key, Name: Dictionary[key]));
+            GameMasters.Add(new GameMaster.GameMaster(Key: key, Name: Dictionary[key], null, null));
     }
     static public void INIT(IGameMasters GameMasters, Dictionary<String, GameMaster.GameMaster> Dictionary)
     {
@@ -160,7 +160,7 @@ public interface IGameMasters : IDictionary<String, GameMaster.IGameMaster>
             foreach (var key in GameMasters.Keys)
                 GameMasters.Remove(key);
         foreach (String key in Dictionary.Keys)
-            GameMasters.Add(new GameMaster.GameMaster(Key: key, Name: Dictionary[key].Name));
+            GameMasters.Add(new GameMaster.GameMaster(Key: key, Name: Dictionary[key].Name, null, null));
     }
     static public void INIT(IGameMasters GameMasters, IGameMasters Original)
     {

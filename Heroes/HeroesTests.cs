@@ -39,7 +39,7 @@ public class HeroesTests
         Assert.That(heroes.GameMasters["Game Master 1"].Name, Is.EqualTo("Unknown"));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.ElementAt(0), Is.EqualTo("Genre 1"));
-        Assert.That(heroes.GameMasters["Game Master 1"].GameMasters, Is.Null);
+        Assert.That(heroes.GameMasters["Game Master 1"].GameMasterKeys(heroes), Is.Null);
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Keys.ElementAt(0), Is.EqualTo("Campaign 1"));
         Assert.That(heroes.NonPlayerCharacters.Count, Is.EqualTo(expectedNonPlayerCharacterCount));
@@ -48,7 +48,7 @@ public class HeroesTests
         Assert.That(heroes.Players["Player 1"].Name, Is.EqualTo("Unknown"));
         Assert.That(heroes.Players["Player 1"].GenreKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.Players["Player 1"].GenreKeys.ElementAt(0), Is.EqualTo("Genre 1"));
-        Assert.That(heroes.Players["Player 1"].GameMasters, Is.Null);
+        Assert.That(heroes.Players["Player 1"].GameMasterKeys(heroes), Is.Null);
         Assert.That(heroes.Players["Player 1"].CampaignKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.Players["Player 1"].CampaignKeys.Keys.ElementAt(0), Is.EqualTo("Campaign 1"));
         Assert.That(heroes.PlayerCharacters.Count, Is.EqualTo(expectedPlayerCharacterCount));
@@ -98,7 +98,7 @@ public class HeroesTests
         Assert.That(heroes.GameMasters["Game Master 1"].Name, Is.EqualTo("Unknown"));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.ElementAt(0), Is.EqualTo("Genre 1"));
-        Assert.That(heroes.GameMasters["Game Master 1"].GameMasters, Is.Null);
+        Assert.That(heroes.GameMasters["Game Master 1"].GameMasterKeys(heroes), Is.Null);
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Keys.ElementAt(0), Is.EqualTo("Campaign 1"));
         Assert.That(heroes.NonPlayerCharacters.Count, Is.EqualTo(expectedNonPlayerCharacterCount));
@@ -114,7 +114,7 @@ public class HeroesTests
         Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.GameMasters["Game Master 1"].GenreKeys.ElementAt(0), Is.EqualTo("Genre 1"));
         Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.GameMasters["Game Master 1"].CampaignKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.GameMasters["Game Master 1"].CampaignKeys.Keys.ElementAt(0), Is.EqualTo("Campaign 1"));
-        Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.GameMasters["Game Master 1"].GameMasters, Is.Null);
+        Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.GameMasters["Game Master 1"].GameMasterKeys(heroes), Is.Null);
         Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.Campaigns.Count, Is.EqualTo(1));
         Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.Campaigns["Campaign 1"].Key, Is.EqualTo("Campaign 1"));
         Assert.That(heroes.NonPlayerCharacters.ElementAt(0).Value.Campaigns["Campaign 1"].Name, Is.EqualTo("Unknown"));
@@ -152,7 +152,7 @@ public class HeroesTests
         Assert.That(heroes.GameMasters["Game Master 1"].Name, Is.EqualTo("Unknown"));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.ElementAt(0), Is.EqualTo("Genre 1"));
-        Assert.That(heroes.GameMasters["Game Master 1"].GameMasters, Is.Null);
+        Assert.That(heroes.GameMasters["Game Master 1"].GameMasterKeys(heroes), Is.Null);
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Keys.ElementAt(0), Is.EqualTo("Campaign 1"));
         Assert.That(heroes.NonPlayerCharacters.Count, Is.EqualTo(expectedNonPlayerCharacterCount));
@@ -190,7 +190,7 @@ public class HeroesTests
         Assert.That(heroes.GameMasters["Game Master 1"].Name, Is.EqualTo("Unknown"));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].GenreKeys.ElementAt(0), Is.EqualTo("Genre 1"));
-        Assert.That(heroes.GameMasters["Game Master 1"].GameMasters, Is.Null);
+        Assert.That(heroes.GameMasters["Game Master 1"].GameMasterKeys(heroes), Is.Null);
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Count, Is.EqualTo(1));
         Assert.That(heroes.GameMasters["Game Master 1"].CampaignKeys.Keys.ElementAt(0), Is.EqualTo("Campaign 1"));
         Assert.That(heroes.NonPlayerCharacters.Count, Is.EqualTo(expectedNonPlayerCharacterCount));

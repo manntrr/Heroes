@@ -1,11 +1,15 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
+using Heroes.Campaigns;
+using Heroes.GameMasters.GameMaster.Players.Player;
+using Heroes.Genres;
 using NUnit.Framework;
 
 namespace Heroes.GameMasters.GameMaster.Players;
 
 public class PlayersTests
 {
+    Heroes? heroes = null;
     KeyValuePair<String, Player.IPlayer>? PlayerPair = null;
     Players? Players = null;
     PlayerKeySet? PlayerKeySet = null;
@@ -15,9 +19,24 @@ public class PlayersTests
     int? expectedPlayerCount = null;
     String[]? expectedPlayerKeys = null;
     Dictionary<String, String>? expectedPlayerNames = null;
+    String? expectedPlayerKey = null;
+    String? expectedPlayerName = null;
+    GenreKeySet? expectedPlayerGenreKeys = null;
+    Genres.Genres? expectedPlayerGenres = null;
+    // TODO: add campaign tests
+    CampaignKeySet? expectedPlayerCampaignKeys = null;
+    //expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Unknown Game Master"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+    GameMasterKeySet? expectedGameMasterKeys = null;
     [SetUp]
     public void Setup()
     {
+        Assert.DoesNotThrow(() => heroes = new());
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => expectedGameMasterKeys = new(GameMasters: new(), MasterGameMasters: ref IGameMasters.GAME_MASTERS/*heroes.GameMasters*/));
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.InstanceOf<GameMasterKeySet>());
+        Assert.DoesNotThrow(() => expectedGameMasterKeys.Clear());
     }
 
     [Test]
@@ -26,6 +45,14 @@ public class PlayersTests
         expectedPlayerCount = 1;
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> { { expectedPlayerKeys[0], "Unknown Player 1" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new());
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -36,6 +63,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -49,6 +91,14 @@ public class PlayersTests
         expectedPlayerCount = 1;
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> { { expectedPlayerKeys[0], "Unknown Player 1" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -71,6 +121,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void GeneratedCountConstructorTest()
@@ -80,6 +145,14 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player 1" },
             { expectedPlayerKeys[1], "Unknown Player 2" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -90,6 +163,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -106,6 +194,14 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player 1" },
             { expectedPlayerKeys[1], "Unknown Player 2" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -128,6 +224,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerElementsConstructorTest()
@@ -136,6 +247,14 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Key: expectedPlayerKeys[0], Name: expectedPlayerNames[expectedPlayerKeys[0]]));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -146,6 +265,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -160,6 +294,14 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -182,6 +324,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerKeyValuePairConstructorTest()
@@ -190,6 +347,14 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => PlayerPair = new(key: expectedPlayerKeys[0], value: new Player.Player(Key: expectedPlayerKeys[0], Name: expectedPlayerNames[expectedPlayerKeys[0]])));
         Assert.That(PlayerPair, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Player: (KeyValuePair<String, Player.IPlayer>)PlayerPair));
@@ -202,6 +367,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -216,6 +396,14 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -240,6 +428,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerElementsDictionaryConstructorTest()
@@ -249,6 +452,14 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Dictionary: new Dictionary<string, string> {
             { expectedPlayerKeys[0], expectedPlayerNames[expectedPlayerKeys[0]]},
             { expectedPlayerKeys[1], expectedPlayerNames[expectedPlayerKeys[1]]}
@@ -262,6 +473,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -278,6 +504,12 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -303,6 +535,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerConstructorTest()
@@ -311,6 +558,12 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Player: new Player.Player(Key: expectedPlayerKeys[0], Name: expectedPlayerNames[expectedPlayerKeys[0]])));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -321,6 +574,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -335,6 +603,12 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -357,6 +631,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerArrayConstructorTest()
@@ -366,6 +655,12 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Array: [
             new Player.Player(Key: expectedPlayerKeys[0], Name: expectedPlayerNames[expectedPlayerKeys[0]]),
             new Player.Player(Key: expectedPlayerKeys[1], Name: expectedPlayerNames[expectedPlayerKeys[1]])]));
@@ -378,6 +673,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -394,6 +704,12 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -418,6 +734,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerKeyValuePairArrayConstructorTest()
@@ -427,6 +758,12 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Array: new KeyValuePair<string, Player.IPlayer>[] {
             new KeyValuePair<string, Player.IPlayer>(
                 key: expectedPlayerKeys[0],
@@ -446,6 +783,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerKeyValuePairArrayInitializorTest()
@@ -461,6 +813,12 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -491,6 +849,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void PlayerDictionaryConstructorTest()
@@ -500,6 +873,12 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Dictionary: new Dictionary<string, Player.Player> {
             { expectedPlayerKeys[0], new Player.Player(Key: expectedPlayerKeys[0], Name: expectedPlayerNames[expectedPlayerKeys[0]])},
             { expectedPlayerKeys[1], new Player.Player(Key: expectedPlayerKeys[0], Name: expectedPlayerNames[expectedPlayerKeys[1]])}
@@ -513,6 +892,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -529,6 +923,12 @@ public class PlayersTests
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" },
             { expectedPlayerKeys[1], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -554,6 +954,21 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void CopyConstructorTest()
@@ -562,6 +977,14 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Original: new Players(Key: expectedPlayerKeys[0], Name: expectedPlayerNames[expectedPlayerKeys[0]])));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -572,6 +995,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -586,6 +1024,14 @@ public class PlayersTests
         expectedPlayerKeys = ["Player 1"];
         expectedPlayerNames = new Dictionary<String, String> {
             { expectedPlayerKeys[0], "Unknown Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new(Count: (int)expectedSetupPlayerCount));
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -607,6 +1053,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -646,6 +1107,14 @@ public class PlayersTests
     public void PlayerKeySetConstructorTest()
     {
         expectedPlayerKeys = ["Unknown Player", "Unknown Fantasy Player", "Unknown Western Player", "Unknown Pulp Fiction Player", "Unknown Modern Player", "Unknown Star Hero Player", "Unknown Champions Player", "Unknown Custom Player"];
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => PlayerKeySet = new(IPlayers.PLAYERS, ref IPlayers.PLAYERS));
         Assert.That(PlayerKeySet, Is.InstanceOf<PlayerKeySet>());
         Assert.That(PlayerKeySet, Is.Not.Null);
@@ -659,6 +1128,14 @@ public class PlayersTests
     public void PlayerKeySetConstructorReturnTest()
     {
         expectedPlayerKeys = ["Unknown Player", "Unknown Fantasy Player", "Unknown Western Player", "Unknown Pulp Fiction Player", "Unknown Modern Player", "Unknown Star Hero Player", "Unknown Champions Player", "Unknown Custom Player"];
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Players = new());
         Assert.That(Players, Is.InstanceOf<Players>());
         Assert.That(Players, Is.Not.Null);
@@ -682,11 +1159,32 @@ public class PlayersTests
             Assert.That(Players[key].Key, Is.EqualTo(IPlayers.PLAYERS[key].Key));
             Assert.That(Players[key].Name, Is.EqualTo(IPlayers.PLAYERS[key].Name));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void CopyPlayerKeySetConstructorTest()
     {
         expectedPlayerKeys = ["Unknown Player", "Unknown Fantasy Player", "Unknown Western Player", "Unknown Pulp Fiction Player", "Unknown Modern Player", "Unknown Star Hero Player", "Unknown Champions Player", "Unknown Custom Player"];
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => PlayerKeySet = new(Original: new PlayerKeySet(IPlayers.PLAYERS, ref IPlayers.PLAYERS)));
         Assert.That(PlayerKeySet, Is.InstanceOf<PlayerKeySet>());
         Assert.That(PlayerKeySet, Is.Not.Null);
@@ -696,6 +1194,21 @@ public class PlayersTests
         for (int index = 0; index < PlayerKeySet.Count; index++)
         {
             Assert.That(PlayerKeySet.Keys[index], Is.EqualTo(expectedPlayerKeys[index]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -720,6 +1233,14 @@ public class PlayersTests
             { expectedPlayerKeys[5], "Unknown Star Hero Player" },
             { expectedPlayerKeys[6], "Unknown Champions Player" },
             { expectedPlayerKeys[7], "Unknown Custom Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => PlayerKeySet = new(IPlayers.PLAYERS, ref IPlayers.PLAYERS));
         Assert.That(PlayerKeySet, Is.InstanceOf<PlayerKeySet>());
         Assert.That(PlayerKeySet, Is.Not.Null);
@@ -733,6 +1254,21 @@ public class PlayersTests
             Assert.That(Players.ContainsKey(expectedPlayerKeys[index]), Is.True);
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
+        }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
         }
     }
     [Test]
@@ -755,6 +1291,12 @@ public class PlayersTests
             { expectedPlayerKeys[4], "Unknown Modern Player" },
             { expectedPlayerKeys[5], "Unknown Star Hero Player" },
             { expectedPlayerKeys[6], "Unknown Champions Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => PlayerKeySet = new(IPlayers.PLAYERS, ref IPlayers.PLAYERS));
         Assert.That(PlayerKeySet, Is.InstanceOf<PlayerKeySet>());
         Assert.That(PlayerKeySet, Is.Not.Null);
@@ -782,6 +1324,14 @@ public class PlayersTests
             { expectedPlayerKeys[4], "Unknown Modern Player" },
             { expectedPlayerKeys[5], "Unknown Star Hero Player" },
             { expectedPlayerKeys[6], "Unknown Champions Player" } };
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerGenreKeys.Clear();
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        expectedPlayerCampaignKeys.Clear();
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => PlayerKeySet = new(IPlayers.PLAYERS, ref IPlayers.PLAYERS));
         Assert.That(PlayerKeySet, Is.InstanceOf<PlayerKeySet>());
         Assert.That(PlayerKeySet, Is.Not.Null);
@@ -798,12 +1348,33 @@ public class PlayersTests
             Assert.That(Players[expectedPlayerKeys[index]].Key, Is.EqualTo(expectedPlayerKeys[index]));
             Assert.That(Players[expectedPlayerKeys[index]].Name, Is.EqualTo(expectedPlayerNames[expectedPlayerKeys[index]]));
         }
+        Assert.That(Players.GenreKeys.Count, Is.EqualTo(expectedPlayerGenreKeys.Count));
+        foreach (String key in Players.GenreKeys.Keys)
+        {
+            Assert.That(expectedPlayerGenreKeys.Keys.Contains(key), Is.True);
+        }
+        Assert.That(Players.CampaignKeys.Count, Is.EqualTo(expectedPlayerCampaignKeys.Count));
+        foreach (String key in Players.CampaignKeys.Keys)
+        {
+            Assert.That(expectedPlayerCampaignKeys.Contains(key), Is.True);
+        }
+        Assert.That(Players.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
+        foreach (String key in Players.GameMasterKeys(heroes).Keys)
+        {
+            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
+        }
     }
     [Test]
     public void KeysAccessorTest()
     {
         expectedPlayerCount = 1;
         expectedPlayerKeys = ["Player 1"];
+        expectedPlayerGenreKeys = IPlayer.DefaultGenreKeys;
+        expectedPlayerCampaignKeys = IPlayer.DefaultCampaignKeys;
+        Assert.That(heroes, Is.Not.Null);
+        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
+        Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => PlayerKeySet = new(new(), ref IPlayers.PLAYERS));
         Assert.That(PlayerKeySet, Is.InstanceOf<PlayerKeySet>());
         Assert.That(PlayerKeySet, Is.Not.Null);

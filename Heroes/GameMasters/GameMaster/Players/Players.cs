@@ -1,4 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
+using Heroes.Campaigns;
+using Heroes.Genres;
 
 namespace Heroes.GameMasters.GameMaster.Players;
 
@@ -86,6 +88,9 @@ public class Players : Dictionary<String, Player.Player>, IPlayers
     public void Init(Dictionary<String, Player.Player> Dictionary) => IPlayers.INIT(this, Dictionary: Dictionary);
     public void Init(IPlayers Original) => IPlayers.INIT(this, Original: Original);
     public void Add(Player.IPlayer Player) => IPlayers.ADD(this, Player);
+    public GenreKeySet GenreKeys { get => IPlayers.GENRE_KEYS(this); }
+    public CampaignKeySet CampaignKeys { get => IPlayers.CAMPAIGN_KEYS(this); }
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes) => IPlayers.GAME_MASTER_KEYS(this, Heroes);
     public static implicit operator Dictionary<String, Player.IPlayer>(Players Players) => IPlayers.CONVERT_PLAYERS_TO_DICTIONARY(Players: Players);
     public static explicit operator Players(Dictionary<String, Player.IPlayer> Dictionary) => (Players)IPlayers.CONVERT_DICTIONARY_TO_PLAYERS(Dictionary: Dictionary);
 }

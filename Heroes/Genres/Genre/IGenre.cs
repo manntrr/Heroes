@@ -23,6 +23,7 @@ public interface IGenre
     }
     static public void INIT(IGenre Genre, String Key, String? Name = null)
     {
+        INIT(Genre: Genre);
         Genre.Key = Key;
         if (Name is not null) Genre.Name = Name;
     }

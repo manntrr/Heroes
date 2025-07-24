@@ -1,4 +1,7 @@
+using Heroes.Campaigns;
 using Heroes.Campaigns.Campaign;
+using Heroes.GameMasters.GameMaster.Players.Player;
+using Heroes.Genres;
 
 namespace Heroes.GameMasters.GameMaster.Players;
 
@@ -177,6 +180,39 @@ public interface IPlayers : IDictionary<String, Player.IPlayer>
         if (Players.ContainsKey(Player.Key)) Players[Player.Key] = Player;
         else Players.Add(key: Player.Key, value: Player);
     }
+    static public GenreKeySet GENRE_KEYS(IPlayers Players)
+    {
+        Genres.Genres temp = new();
+        GenreKeySet genres = new(new(), ref temp);
+        genres.Clear();
+        foreach (KeyValuePair<string, IPlayer> pair in Players)
+        {
+            genres.Union(pair.Value.GenreKeys);
+        }
+        return genres;
+    }
+    static public CampaignKeySet CAMPAIGN_KEYS(IPlayers Players)
+    {
+        Campaigns.Campaigns temp = new();
+        CampaignKeySet campaigns = new(new(), ref temp);
+        campaigns.Clear();
+        foreach (KeyValuePair<string, IPlayer> pair in Players)
+        {
+            campaigns.Union(pair.Value.CampaignKeys);
+        }
+        return campaigns;
+    }
+    static public GameMasterKeySet GAME_MASTER_KEYS(IPlayers Players, Heroes Heroes)
+    {
+        GameMasters temp = new();
+        GameMasterKeySet gameMasters = new(new(), ref temp);
+        gameMasters.Clear();
+        foreach (KeyValuePair<string, IPlayer> pair in Players)
+        {
+            gameMasters.Union(pair.Value.GameMasterKeys(Heroes));
+        }
+        return gameMasters;
+    }
     public void Init(int count = 1);
     public void Init(String Key, String Name);
     public void Init(Player.IPlayer Player);
@@ -188,4 +224,7 @@ public interface IPlayers : IDictionary<String, Player.IPlayer>
     public void Init(Dictionary<String, Player.Player> Dictionary);
     public void Init(IPlayers Original);
     public void Add(Player.IPlayer Player);
+    public GenreKeySet GenreKeys { get; }
+    public CampaignKeySet CampaignKeys { get; }
+    public GameMasterKeySet GameMasterKeys(Heroes Heroes);
 }
