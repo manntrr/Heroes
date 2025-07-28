@@ -63,10 +63,16 @@ public class Genres : Dictionary<String, Genre.Genre>, IGenres
     public Genres(String Key, IGenre Genre) => Init(Key: Key, Genre: Genre);
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public Genres(KeyValuePair<String, String> GenreKeyNamePair) => Init(GenreKeyNamePair: GenreKeyNamePair);
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public Genres(KeyValuePair<String, IGenre> Genre) => Init(Genre: Genre);
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public Genres(IGenre[] Array) => Init(Array: Array);
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    public Genres(KeyValuePair<String, String>[] GenreKeyNamePairArray) => Init(GenreKeyNamePairArray: GenreKeyNamePairArray);
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public Genres(KeyValuePair<String, IGenre>[] Array) => Init(Array: Array);
@@ -84,8 +90,10 @@ public class Genres : Dictionary<String, Genre.Genre>, IGenres
     public void Init(String Key, String Name) => IGenres.INIT(this, Key: Key, Name: Name);
     public void Init(IGenre Genre) => IGenres.INIT(this, Genre: Genre);
     public void Init(String Key, IGenre Genre) => IGenres.INIT(this, Key: Key, Genre: Genre);
+    public void Init(KeyValuePair<String, String> GenreKeyNamePair) => IGenres.INIT(this, GenreKeyNamePair: GenreKeyNamePair);
     public void Init(KeyValuePair<String, IGenre> Genre) => IGenres.INIT(this, Genre: Genre);
     public void Init(IGenre[] Array) => IGenres.INIT(this, GenreArray: Array);
+    public void Init(KeyValuePair<String, String>[] GenreKeyNamePairArray) => IGenres.INIT(this, GenreKeyNamePairArray: GenreKeyNamePairArray);
     public void Init(KeyValuePair<String, IGenre>[] Array) => IGenres.INIT(this, GenrePairArray: Array);
     public void Init(Dictionary<String, String> Dictionary) => IGenres.INIT(this, Dictionary: Dictionary);
     public void Init(Dictionary<String, Genre.Genre> Dictionary) => IGenres.INIT(this, Dictionary: Dictionary);

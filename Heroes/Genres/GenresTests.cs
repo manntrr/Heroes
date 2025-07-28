@@ -1,34 +1,39 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
+﻿using NUnit.Framework;
+using Heroes.Genres.Genre;
 using Heroes.Campaigns;
-using Heroes.GameMasters;
 using Heroes.GameMasters.GameMaster.Players;
-using NUnit.Framework;
+using Heroes.GameMasters;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
+using CampaignKeySet = Heroes.Campaigns.CampaignKeySet;
+using PlayerKeySet = Heroes.GameMasters.GameMaster.Players.PlayerKeySet;
+using GameMasterKeySet = Heroes.GameMasters.GameMasterKeySet;
+using _Campaigns = Heroes.Campaigns.Campaigns;
+using _Players = Heroes.GameMasters.GameMaster.Players.Players;
+using _GameMasters = Heroes.GameMasters.GameMasters;
+using _Genre = Heroes.Genres.Genre.Genre;
+using _Genres = Heroes.Genres.Genres;
+using Is = NUnit.Framework.Constraints.Is;
+using NUnit.Framework.Constraints;
 
 namespace Heroes.Genres;
 
 public class GenresTests
 {
-    Heroes? heroes = null;
-    KeyValuePair<String, Genre.IGenre>? genrePair = null;
-    Genres? genres = null;
-    GenreKeySet? genreKeySet = null;
-    int? expectedSetupGenreCount = null;
-    String[]? expectedSetupGenreKeys = null;
-    Dictionary<String, String>? expectedSetupGenreNames = null;
-    int? expectedGenreCount = null;
-    String[]? expectedGenreKeys = null;
-    Dictionary<String, String>? expectedGenreNames = null;
+    static readonly Heroes heroes = new();
+    static _Campaigns campaigns = heroes.Campaigns;
+    static _Players players = heroes.Players;
+    static _GameMasters gameMasters = heroes.GameMasters;
+    _Genres? genres = null;
     //expectedCampaignKeys = new(Campaigns: new([ICampaigns.CAMPAIGNS["Unknown Campaign"]]), MasterCampaigns: ref ICampaigns.CAMPAIGNS);
-    Campaigns.CampaignKeySet? expectedCampaignKeys = null;
+    CampaignKeySet? expectedCampaignKeys = null;
     //expectedPlayerKeys = new(Players: new([IPlayers.PLAYERS["Unknown Player"]]), MasterPlayers: ref IPlayers.PLAYERS);
-    GameMasters.GameMaster.Players.PlayerKeySet? expectedPlayerKeys = null;
+    PlayerKeySet? expectedPlayerKeys = null;
     //expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Unknown Game Master"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
-    GameMasters.GameMasterKeySet? expectedGameMasterKeys = null;
+    GameMasterKeySet? expectedGameMasterKeys = null;
     [SetUp]
     public void Setup()
     {
-        Assert.DoesNotThrow(() => heroes = new());
         Assert.That(heroes, Is.Not.Null);
         Assert.That(heroes, Is.InstanceOf<Heroes>());
         Assert.DoesNotThrow(() => expectedCampaignKeys = new(Campaigns: new(), MasterCampaigns: ref ICampaigns.CAMPAIGNS/*heroes.Campaigns*/));
@@ -44,1312 +49,1060 @@ public class GenresTests
         Assert.That(expectedGameMasterKeys, Is.InstanceOf<GameMasterKeySet>());
         Assert.DoesNotThrow(() => expectedGameMasterKeys.Clear());
     }
-
+    static readonly TestCaseData[] NullConstructor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Genre 1", Name:  "Unknown Genre 1")]),
+            //new CampaignKeySet(Campaigns: new([ICampaigns.CAMPAIGNS["Unknown Campaign"]]), MasterCampaigns: ref ICampaigns.CAMPAIGNS);
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            //new PlayerKeySet(Players: new([IPlayers.PLAYERS["Unknown Player"]]), MasterPlayers: ref IPlayers.PLAYERS);
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            //new GameMasterKeySet(GameMasters: new([IGameMasters.GAME_MASTERS["Unknown Game Master"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("NullConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A")
+    ];
     [Test]
-    public void NullConstructorTest()
+    [TestCaseSource(nameof(NullConstructor_Cases))]
+    public void NullConstructorTest(_Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> { { expectedGenreKeys[0], "Unknown Genre 1" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
         Assert.DoesNotThrow(() => genres = new());
-        Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] NullInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1")]),
+            new _Genres([new _Genre(Key: "Genre 1", Name:  "Unknown Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("NullInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A")
+    ];
     [Test]
-    public void NullInitializorTest()
+    [TestCaseSource(nameof(NullInitializor_Cases))]
+    public void NullInitializorTest(_Genres preInitSetupGenres, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 2;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" } };
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> { { expectedGenreKeys[0], "Unknown Genre 1" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
-        Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
+        Assert.That(genres, Is.Not.Null);
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
         Assert.DoesNotThrow(() => genres.Init());
-        Assert.That(genres, Is.InstanceOf<Genres>());
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GeneratedCountConstructor_Cases = [
+        new TestCaseData(
+            0, new _Genres(new _Genre[0]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GeneratedCountConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            1, new _Genres([new _Genre(Key: "Genre 1", Name:  "Unknown Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GeneratedCountConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B"),
+        new TestCaseData(
+            2, new _Genres([new _Genre(Key: "Genre 1", Name:  "Unknown Genre 1"), new _Genre(Key: "Genre 2", Name:  "Unknown Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GeneratedCountConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "C")
+    ];
     [Test]
-    public void GeneratedCountConstructorTest()
+    [TestCaseSource(nameof(GeneratedCountConstructor_Cases))]
+    public void GeneratedCountConstructorTest(int caseExpectedCount, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre 1" },
-            { expectedGenreKeys[1], "Unknown Genre 2" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Count: caseExpectedCount));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GeneratedCountInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            0, new _Genres(new _Genre[0]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GeneratedCountInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            1, new _Genres([new _Genre(Key: "Genre 1", Name:  "Unknown Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GeneratedCountInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            2, new _Genres([new _Genre(Key: "Genre 1", Name:  "Unknown Genre 1"), new _Genre(Key: "Genre 2", Name:  "Unknown Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GeneratedCountInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "C")
+    ];
     [Test]
-    public void GeneratedCountInitializorTest()
+    [TestCaseSource(nameof(GeneratedCountInitializor_Cases))]
+    public void GeneratedCountInitializorTest(_Genres preInitSetupGenres, int caseExpectedCount, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 3;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2", "Genre 3"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" },
-            { expectedSetupGenreKeys[2], "Unknown Genre 3" } };
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre 1" },
-            { expectedGenreKeys[1], "Unknown Genre 2" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Count: (int)expectedGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Count: caseExpectedCount));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreElementsConstructor_Cases = [
+        new TestCaseData(
+            "Custom Genre 1 Key", "Custom Genre 1", new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            "Custom Genre 2 Key", "Custom Genre 2", new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreElementsConstructorTest()
+    [TestCaseSource(nameof(GenreElementsConstructor_Cases))]
+    public void GenreElementsConstructorTest(string caseExpectedKey, string caseExpectedName, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Key: caseExpectedKey, Name: caseExpectedName));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreElementsInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            "Custom Genre 1 Key", "Custom Genre 1", new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            "Custom Genre 2 Key", "Custom Genre 2", new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreElementsInitializorTest()
+    [TestCaseSource(nameof(GenreElementsInitializor_Cases))]
+    public void GenreElementsInitializorTest(_Genres preInitSetupGenres, string caseExpectedKey, string caseExpectedName, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 2;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" } };
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Key: caseExpectedKey, Name: caseExpectedName));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] KeyNameKeyValuePairConstructor_Cases = [
+        new TestCaseData(
+            new KeyValuePair<string,string>(key: "Custom Genre 1 Key", value: "Custom Genre 1"), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new KeyValuePair<string,string>(key: "Custom Genre 2 Key", value: "Custom Genre 2"), new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreKeyValuePairConstructorTest()
+    [TestCaseSource(nameof(KeyNameKeyValuePairConstructor_Cases))]
+    public void KeyNameKeyValuePairConstructorTest(KeyValuePair<string, string> caseExpectedKeyValuePair, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genrePair = new(key: expectedGenreKeys[0], value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
-        Assert.That(genrePair, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Genre: (KeyValuePair<String, Genre.IGenre>)genrePair));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(GenreKeyNamePair: caseExpectedKeyValuePair));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] KeyNameKeyValuePairInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string,string>(key: "Custom Genre 1 Key", value: "Custom Genre 1"), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string,string>(key: "Custom Genre 2 Key", value: "Custom Genre 2"), new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreKeyValuePairInitializorTest()
+    [TestCaseSource(nameof(KeyNameKeyValuePairInitializor_Cases))]
+    public void KeyNameKeyValuePairInitializorTest(_Genres preInitSetupGenres, KeyValuePair<string, string> caseExpectedKeyValuePair, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 2;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" } };
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genrePair = new(key: expectedGenreKeys[0], value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
-        Assert.That(genrePair, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres.Init(Genre: (KeyValuePair<String, Genre.IGenre>)genrePair));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(GenreKeyNamePair: caseExpectedKeyValuePair));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreKeyValuePairConstructor_Cases = [
+        new TestCaseData(
+            new KeyValuePair<string,IGenre>(key: "Custom Genre 1 Key", value: new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new KeyValuePair<string,IGenre>(key: "Custom Genre 2 Key", value: new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")), new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreElementsDictionaryConstructorTest()
+    [TestCaseSource(nameof(GenreKeyValuePairConstructor_Cases))]
+    public void GenreKeyValuePairConstructorTest(KeyValuePair<string, IGenre> caseExpectedKeyValuePair, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Dictionary: new Dictionary<string, string> {
-            { expectedGenreKeys[0], expectedGenreNames[expectedGenreKeys[0]]},
-            { expectedGenreKeys[1], expectedGenreNames[expectedGenreKeys[1]]}
-        }));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Genre: caseExpectedKeyValuePair));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreKeyValuePairInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string,IGenre>(key: "Custom Genre 1 Key", value: new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string,IGenre>(key: "Custom Genre 2 Key", value: new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")), new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreElementsDictionaryInitializorTest()
+    [TestCaseSource(nameof(GenreKeyValuePairInitializor_Cases))]
+    public void GenreKeyValuePairInitializorTest(_Genres preInitSetupGenres, KeyValuePair<string, IGenre> caseExpectedKeyValuePair, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 3;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2", "Genre 3"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" },
-            { expectedSetupGenreKeys[2], "Unknown Genre 3" } };
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Dictionary: new Dictionary<string, string> {
-            { expectedGenreKeys[0], expectedGenreNames[expectedGenreKeys[0]]},
-            { expectedGenreKeys[1], expectedGenreNames[expectedGenreKeys[1]]}
-        }));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Genre: caseExpectedKeyValuePair));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreElementsDictionaryConstructor_Cases = [
+        new TestCaseData(
+            new Dictionary<string, string> { { "Custom Genre 1 Key", "Custom Genre 1"}, { "Custom Genre 2 Key", "Custom Genre 2"} },
+            new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsDictionaryConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new Dictionary<string, string> { { "Custom Genre 2 Key", "Custom Genre 2"} },
+            new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsDictionaryConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreConstructorTest()
+    [TestCaseSource(nameof(GenreElementsDictionaryConstructor_Cases))]
+    public void GenreElementsDictionaryConstructorTest(Dictionary<string, string> caseExpectedDictionary, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Genre: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Dictionary: caseExpectedDictionary));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreElementsDictionaryInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new Dictionary<string, string> { { "Custom Genre 1 Key", "Custom Genre 1"}, { "Custom Genre 2 Key", "Custom Genre 2"} },
+            new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsDictionaryInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new Dictionary<string, string> { { "Custom Genre 2 Key", "Custom Genre 2"} },
+            new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreElementsDictionaryInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreInitializorTest()
+    [TestCaseSource(nameof(GenreElementsDictionaryInitializor_Cases))]
+    public void GenreElementsDictionaryInitializorTest(_Genres preInitSetupGenres, Dictionary<string, string> caseExpectedDictionary, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 2;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" } };
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Genre: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Dictionary: caseExpectedDictionary));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreConstructor_Cases = [
+        new TestCaseData(
+            new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2"), new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreArrayConstructorTest()
+    [TestCaseSource(nameof(GenreConstructor_Cases))]
+    public void GenreConstructorTest(_Genre caseExpectedGenre, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Array: [
-            new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]),
-            new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])]));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Genre: caseExpectedGenre));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2"), new _Genres([new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreArrayInitializorTest()
+    [TestCaseSource(nameof(GenreInitializor_Cases))]
+    public void GenreInitializorTest(_Genres preInitSetupGenres, _Genre caseExpectedGenre, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 3;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2", "Genre 3"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" },
-            { expectedSetupGenreKeys[2], "Unknown Genre 3" } };
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Array: [
-            new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]]),
-            new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])]));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Genre: caseExpectedGenre));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreArrayConstructor_Cases = [
+        new TestCaseData(
+            new _Genre[] { new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreArrayConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genre[] { new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreArrayConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreKeyValuePairArrayConstructorTest()
+    [TestCaseSource(nameof(GenreArrayConstructor_Cases))]
+    public void GenreArrayConstructorTest(_Genre[] caseExpectedGenreArray, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Array: new KeyValuePair<string, Genre.IGenre>[] {
-            new KeyValuePair<string, Genre.IGenre>(
-                key: expectedGenreKeys[0],
-                value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])
-                ),
-            new KeyValuePair<string, Genre.IGenre>(
-                key: expectedGenreKeys[1],
-                value: new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])
-                )}));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Array: caseExpectedGenreArray));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreArrayInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new _Genre[] { new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreArrayInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new _Genre[] { new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreArrayInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreKeyValuePairArrayInitializorTest()
+    [TestCaseSource(nameof(GenreArrayInitializor_Cases))]
+    public void GenreArrayInitializorTest(_Genres preInitSetupGenres, _Genre[] caseExpectedGenreArray, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 3;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2", "Genre 3"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" },
-            { expectedSetupGenreKeys[2], "Unknown Genre 3" } };
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Array: new KeyValuePair<string, Genre.IGenre>[] {
-            new KeyValuePair<string, Genre.IGenre>(
-                key: expectedGenreKeys[0],
-                value: new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])
-                ),
-            new KeyValuePair<string, Genre.IGenre>(
-                key: expectedGenreKeys[1],
-                value: new Genre.Genre(Key: expectedGenreKeys[1], Name: expectedGenreNames[expectedGenreKeys[1]])
-                )}));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Array: caseExpectedGenreArray));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] KeyNameKeyValuePairArrayConstructor_Cases = [
+        new TestCaseData(
+            new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(key: "Custom Genre 1 Key", value:  "Custom Genre 1") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairArrayConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(key: "Custom Genre 1 Key", value:  "Custom Genre 1"), new KeyValuePair<string, string>(key: "Custom Genre 2 Key", value:  "Custom Genre 2") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairArrayConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreDictionaryConstructorTest()
+    [TestCaseSource(nameof(KeyNameKeyValuePairArrayConstructor_Cases))]
+    public void KeyNameKeyValuePairArrayConstructorTest(KeyValuePair<string, string>[] caseExpectedKeyValuePairArray, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Dictionary: new Dictionary<string, Genre.Genre> {
-            { expectedGenreKeys[0], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])},
-            { expectedGenreKeys[1], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[1]])}
-        }));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(GenreKeyNamePairArray: caseExpectedKeyValuePairArray));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] KeyNameKeyValuePairArrayInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(key: "Custom Genre 1 Key", value:  "Custom Genre 1") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairArrayInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(key: "Custom Genre 1 Key", value:  "Custom Genre 1"), new KeyValuePair<string, string>(key: "Custom Genre 2 Key", value:  "Custom Genre 2") }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("KeyNameKeyValuePairArrayInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenreDictionaryInitializorTest()
+    [TestCaseSource(nameof(KeyNameKeyValuePairArrayInitializor_Cases))]
+    public void KeyNameKeyValuePairArrayInitializorTest(_Genres preInitSetupGenres, KeyValuePair<string, string>[] caseExpectedKeyValuePairArray, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 3;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2", "Genre 3"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" },
-            { expectedSetupGenreKeys[2], "Unknown Genre 3" } };
-        expectedGenreCount = 2;
-        expectedGenreKeys = ["Genre 1", "Genre 2"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" },
-            { expectedGenreKeys[1], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Dictionary: new Dictionary<string, Genre.Genre> {
-            { expectedGenreKeys[0], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])},
-            { expectedGenreKeys[1], new Genre.Genre(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[1]])}
-        }));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(GenreKeyNamePairArray: caseExpectedKeyValuePairArray));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreKeyValuePairArrayConstructor_Cases = [
+        new TestCaseData(
+            new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")) }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairArrayConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")), new KeyValuePair<string, IGenre>(key: "Custom Genre 2 Key", value:  new _Genre(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")) }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairArrayConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void CopyConstructorTest()
+    [TestCaseSource(nameof(GenreKeyValuePairArrayConstructor_Cases))]
+    public void GenreKeyValuePairArrayConstructorTest(KeyValuePair<string, IGenre>[] caseExpectedKeyValuePairArray, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Original: new Genres(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Array: caseExpectedKeyValuePairArray));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreKeyValuePairArrayInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")) }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairArrayInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")), new KeyValuePair<string, IGenre>(key: "Custom Genre 2 Key", value:  new _Genre(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")) }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreKeyValuePairArrayInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void CopyInitializorTest()
+    [TestCaseSource(nameof(GenreKeyValuePairArrayInitializor_Cases))]
+    public void GenreKeyValuePairArrayInitializorTest(_Genres preInitSetupGenres, KeyValuePair<string, IGenre>[] caseExpectedKeyValuePairArray, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedSetupGenreCount = 2;
-        expectedSetupGenreKeys = ["Genre 1", "Genre 2"];
-        expectedSetupGenreNames = new Dictionary<String, String> {
-            { expectedSetupGenreKeys[0], "Unknown Genre 1" },
-            { expectedSetupGenreKeys[1], "Unknown Genre 2" } };
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        expectedGenreNames = new Dictionary<String, String> {
-            { expectedGenreKeys[0], "Unknown Genre" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new(Count: (int)expectedSetupGenreCount));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedSetupGenreCount));
-        for (int index = 0; index < genres.Count; index++)
-        {
-            Assert.That(genres.Keys.Contains(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedSetupGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedSetupGenreKeys[index]].Key, Is.EqualTo(expectedSetupGenreKeys[index]));
-            Assert.That(genres[expectedSetupGenreKeys[index]].Name, Is.EqualTo(expectedSetupGenreNames[expectedSetupGenreKeys[index]]));
-        }
-        Assert.DoesNotThrow(() => genres.Init(Original: new Genres(Key: expectedGenreKeys[0], Name: expectedGenreNames[expectedGenreKeys[0]])));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Array: caseExpectedKeyValuePairArray));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] GenreDictionaryConstructor_Cases = [
+        new TestCaseData(
+            new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")} }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreDictionaryConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")}, { "Custom Genre 2 Key", new _Genre(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")} }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreDictionaryConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void DefaultGenresCollectionTest()
+    [TestCaseSource(nameof(GenreDictionaryConstructor_Cases))]
+    public void GenreDictionaryConstructorTest(Dictionary<string, _Genre> caseExpectedGenreDictionary, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        int expectedGenreCount = 8;
-        String[] expectedGenreKeys = ["Unknown",
-            "Fantasy",
-            "Western",
-            "Pulp Fiction",
-            "Modern",
-            "Star Hero",
-            "Champions",
-            "Custom"];
-        Dictionary<String, String> expectedGenreNames = new()
+        Assert.Multiple(() =>
         {
-            { expectedGenreKeys[0], "Unknown" },
-            { expectedGenreKeys[1], "Fantasy" },
-            { expectedGenreKeys[2], "Western" },
-            { expectedGenreKeys[3], "Pulp Fiction" },
-            { expectedGenreKeys[4], "Modern" },
-            { expectedGenreKeys[5], "Star Hero" },
-            { expectedGenreKeys[6], "Champions" },
-            { expectedGenreKeys[7], "Custom" } };
-        Assert.That(IGenres.GENRES, Is.InstanceOf<Genres>());
-        Assert.That(IGenres.GENRES, Is.Not.Null);
-        Assert.That(IGenres.GENRES.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < IGenres.GENRES.Count; index++)
-        {
-            Assert.That(IGenres.GENRES.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(IGenres.GENRES.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(IGenres.GENRES[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(IGenres.GENRES[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-    }
-    [Test]
-    public void GenreKeySetConstructorTest()
-    {
-        Genres temp = new((IGenres)IGenres.GENRES);
-        expectedGenreKeys = ["Unknown", "Fantasy", "Western", "Pulp Fiction", "Modern", "Star Hero", "Champions", "Custom"];
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genreKeySet = new(IGenres.GENRES, ref temp));
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Assert.That(genreKeySet.Count, Is.EqualTo(expectedGenreKeys.Length));
-        for (int index = 0; index < genreKeySet.Count; index++)
-        {
-            Assert.That(genreKeySet.Keys[index], Is.EqualTo(expectedGenreKeys[index]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
-    }
-    [Test]
-    public void GenreKeySetConstructorReturnTest()
-    {
-        expectedGenreKeys = ["Unknown", "Fantasy", "Western", "Pulp Fiction", "Modern", "Star Hero", "Champions", "Custom"];
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = new());
-        Assert.That(genres, Is.InstanceOf<Genres>());
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Dictionary: caseExpectedGenreDictionary));
         Assert.That(genres, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres.Clear());
-        Assert.DoesNotThrow(() => genreKeySet = new(IGenres.GENRES, ref genres));
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Assert.That(genreKeySet.Count, Is.EqualTo(expectedGenreKeys.Length));
-        for (int index = 0; index < genreKeySet.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genreKeySet.Keys[index], Is.EqualTo(expectedGenreKeys[index]));
-        }
-        Assert.That(genres, Is.InstanceOf<Genres>());
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
+    }
+    static readonly TestCaseData[] GenreDictionaryInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")} }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreDictionaryInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")}, { "Custom Genre 2 Key", new _Genre(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")} }, new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("GenreDictionaryInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
+    [Test]
+    [TestCaseSource(nameof(GenreDictionaryInitializor_Cases))]
+    public void GenreDictionaryInitializorTest(_Genres preInitSetupGenres, Dictionary<string, _Genre> caseExpectedGenreDictionary, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(IGenres.GENRES.Count));
-        Assert.That(genreKeySet.Count, Is.EqualTo(IGenres.GENRES.Count));
-        foreach (String key in IGenres.GENRES.Keys)
-        {
-            Assert.That(genreKeySet.Keys.Contains(key), Is.True);
-            Assert.That(genres.ContainsKey(key), Is.True);
-            Assert.That(genres[key].Key, Is.EqualTo(IGenres.GENRES[key].Key));
-            Assert.That(genres[key].Name, Is.EqualTo(IGenres.GENRES[key].Name));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
-    }
-    [Test]
-    public void CopyGenreKeySetConstructorTest()
-    {
-        expectedGenreKeys = ["Unknown", "Fantasy", "Western", "Pulp Fiction", "Modern", "Star Hero", "Champions", "Custom"];
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genreKeySet = new(Original: new GenreKeySet(IGenres.GENRES, ref IGenres.GENRES)));
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Assert.That(genreKeySet.Count, Is.EqualTo(expectedGenreKeys.Length));
-        for (int index = 0; index < genreKeySet.Count; index++)
-        {
-            Assert.That(genreKeySet.Keys[index], Is.EqualTo(expectedGenreKeys[index]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
-    }
-    [Test]
-    public void GenresAccessorTest()
-    {
-        expectedGenreCount = 8;
-        expectedGenreKeys = ["Unknown",
-            "Fantasy",
-            "Western",
-            "Pulp Fiction",
-            "Modern",
-            "Star Hero",
-            "Champions",
-            "Custom"];
-        expectedGenreNames = new()
-        {
-            { expectedGenreKeys[0], "Unknown" },
-            { expectedGenreKeys[1], "Fantasy" },
-            { expectedGenreKeys[2], "Western" },
-            { expectedGenreKeys[3], "Pulp Fiction" },
-            { expectedGenreKeys[4], "Modern" },
-            { expectedGenreKeys[5], "Star Hero" },
-            { expectedGenreKeys[6], "Champions" },
-            { expectedGenreKeys[7], "Custom" } };
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genreKeySet = new(IGenres.GENRES, ref IGenres.GENRES));
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Assert.DoesNotThrow(() => genres = genreKeySet.Genres(IGenres.GENRES));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Dictionary: caseExpectedGenreDictionary));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] CopyConstructor_Cases = [
+        new TestCaseData(
+            new _Genres(Dictionary: new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")} }), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("CopyConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres(Dictionary: new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")}, { "Custom Genre 2 Key", new _Genre(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")} }), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("CopyConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void GenresAccessorWithMissingThrownTest()
+    [TestCaseSource(nameof(CopyConstructor_Cases))]
+    public void CopyConstructorTest(_Genres caseExpectedOriginalGenres, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 7;
-        expectedGenreKeys = ["Unknown",
-            "Fantasy",
-            "Western",
-            "Pulp Fiction",
-            "Modern",
-            "Star Hero",
-            "Champions"];
-        expectedGenreNames = new()
+        Assert.Multiple(() =>
         {
-            { expectedGenreKeys[0], "Unknown" },
-            { expectedGenreKeys[1], "Fantasy" },
-            { expectedGenreKeys[2], "Western" },
-            { expectedGenreKeys[3], "Pulp Fiction" },
-            { expectedGenreKeys[4], "Modern" },
-            { expectedGenreKeys[5], "Star Hero" },
-            { expectedGenreKeys[6], "Champions" }};
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genreKeySet = new(IGenres.GENRES, ref IGenres.GENRES));
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Genres missing = new(Original: IGenres.GENRES);
-        missing.Remove("Custom");
-        Assert.Throws<ArgumentOutOfRangeException>(() => genres = genreKeySet.Genres(missing));
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
-    }
-    [Test]
-    public void GenresAccessorWithMissingNotThrownTest()
-    {
-        expectedGenreCount = 7;
-        expectedGenreKeys = ["Unknown",
-            "Fantasy",
-            "Western",
-            "Pulp Fiction",
-            "Modern",
-            "Star Hero",
-            "Champions"];
-        expectedGenreNames = new()
-        {
-            { expectedGenreKeys[0], "Unknown" },
-            { expectedGenreKeys[1], "Fantasy" },
-            { expectedGenreKeys[2], "Western" },
-            { expectedGenreKeys[3], "Pulp Fiction" },
-            { expectedGenreKeys[4], "Modern" },
-            { expectedGenreKeys[5], "Star Hero" },
-            { expectedGenreKeys[6], "Champions" }};
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genreKeySet = new(IGenres.GENRES, ref IGenres.GENRES));
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Genres missing = new(Original: IGenres.GENRES);
-        missing.Remove("Custom");
-        Assert.DoesNotThrow(() => genres = genreKeySet.Genres(missing, false));
-        Assert.That(genres, Is.InstanceOf<Genres>());
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new(Original: caseExpectedOriginalGenres));
         Assert.That(genres, Is.Not.Null);
-        Assert.That(genres.Count, Is.EqualTo(expectedGenreCount));
-        for (int index = 0; index < genres.Count; index++)
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(genres.Keys.Contains(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres.ContainsKey(expectedGenreKeys[index]), Is.True);
-            Assert.That(genres[expectedGenreKeys[index]].Key, Is.EqualTo(expectedGenreKeys[index]));
-            Assert.That(genres[expectedGenreKeys[index]].Name, Is.EqualTo(expectedGenreNames[expectedGenreKeys[index]]));
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
-        {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
-        {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
-        {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
+    static readonly TestCaseData[] CopyInitializor_Cases = [
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new _Genres(Dictionary: new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")} }), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("CopyInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
+        new TestCaseData(
+            new _Genres([new _Genre(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new _Genre(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
+            new _Genres(Dictionary: new Dictionary<string, _Genre> { { "Custom Genre 1 Key", new _Genre(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")}, { "Custom Genre 2 Key", new _Genre(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")} }), new _Genres([new _Genre(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new _Genre(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("CopyInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
+    ];
     [Test]
-    public void KeysAccessorTest()
+    [TestCaseSource(nameof(CopyInitializor_Cases))]
+    public void CopyInitializorTest(_Genres preInitSetupGenres, _Genres caseExpectedOriginalGenres, _Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
-        expectedGenreCount = 1;
-        expectedGenreKeys = ["Genre 1"];
-        Assert.That(heroes, Is.Not.Null);
-        Assert.That(expectedCampaignKeys, Is.Not.Null);
-        Assert.That(expectedPlayerKeys, Is.Not.Null);
-        Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        Assert.DoesNotThrow(() => genreKeySet = new(new(), ref IGenres.GENRES));
-        Assert.That(genreKeySet, Is.InstanceOf<GenreKeySet>());
-        Assert.That(genreKeySet, Is.Not.Null);
-        Assert.That(genreKeySet.Keys.Count, Is.EqualTo(expectedGenreCount));
-        foreach (String key in genreKeySet.Keys)
+        Assert.Multiple(() =>
         {
-            Assert.That(expectedGenreKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.CampaignKeys(heroes).Count, Is.EqualTo(expectedCampaignKeys.Count));
-        foreach (String key in genres.CampaignKeys(heroes).Keys)
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(preInitSetupGenres, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = new((IGenres)preInitSetupGenres));
+        Assert.That(genres, Is.Not.Null);
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, preInitSetupGenres));
+        //Assert.That(genres, Is.Not.GenresEqual(heroes, caseExpectedGenres));
+        Assert.DoesNotThrow(() => genres.Init(Original: caseExpectedOriginalGenres));
+        Assert.That(genres, Is.Not.Null);
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(expectedCampaignKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.PlayerKeys(heroes).Count, Is.EqualTo(expectedPlayerKeys.Count));
-        foreach (String key in genres.PlayerKeys(heroes).Keys)
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
+    }
+    static readonly TestCaseData[] DefaultGenresCollection_Cases = [
+        new TestCaseData(
+            new _Genres([
+                new _Genre(Key: "Unknown", Name:  "Unknown"),
+                new _Genre(Key: "Fantasy", Name:  "Fantasy"),
+                new _Genre(Key: "Western", Name:  "Western"),
+                new _Genre(Key: "Pulp Fiction", Name:  "Pulp Fiction"),
+                new _Genre(Key: "Modern", Name:  "Modern"),
+                new _Genre(Key: "Star Hero", Name:  "Star Hero"),
+                new _Genre(Key: "Champions", Name:  "Champions"),
+                new _Genre(Key: "Custom", Name:  "Custom")
+            ]),
+            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
+            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
+            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
+            .SetName("DefaultGenresCollectionTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A")
+    ];
+    [Test]
+    [TestCaseSource(nameof(DefaultGenresCollection_Cases))]
+    public void DefaultGenresCollectionTest(_Genres caseExpectedGenres, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
+    {
+        Assert.Multiple(() =>
         {
-            Assert.That(expectedPlayerKeys.Contains(key), Is.True);
-        }
-        Assert.That(genres.GameMasterKeys(heroes).Count, Is.EqualTo(expectedGameMasterKeys.Count));
-        foreach (String key in genres.GameMasterKeys(heroes).Keys)
+            Assert.That(heroes, Is.Not.Null);
+            Assert.That(caseExpectedGenres, Is.Not.Null);
+            Assert.That(caseExpectedCampaignKeys, Is.Not.Null);
+            Assert.That(caseExpectedPlayerKeys, Is.Not.Null);
+            Assert.That(caseExpectedGameMasterKeys, Is.Not.Null);
+        });
+        Assert.That(heroes, Is.InstanceOf<Heroes>());
+        Assert.DoesNotThrow(() => genres = IGenres.GENRES);
+        Assert.That(genres, Is.Not.Null);
+        Assert.That(genres, Is.InstanceOf<_Genres>());
+        Assert.That(genres, Is.GenresEqual(heroes, caseExpectedGenres));
+        Assert.Multiple(() =>
         {
-            Assert.That(expectedGameMasterKeys.Contains(key), Is.True);
-        }
+            Assert.That(genres, Is.GenresCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
+            Assert.That(genres, Is.GenresPlayerKeysEqual(heroes, caseExpectedPlayerKeys));
+            Assert.That(genres, Is.GenresGameMasterKeysEqual(heroes, caseExpectedGameMasterKeys));
+        });
     }
 }
