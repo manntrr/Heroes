@@ -2,38 +2,32 @@
 using Heroes.GameMasters;
 using Heroes.GameMasters.GameMaster.Players;
 using Is = NUnit.Framework.Constraints.Is;
-using _Campaigns = Heroes.Campaigns.Campaigns;
-using _Players = Heroes.GameMasters.GameMaster.Players.Players;
-using _GameMasters = Heroes.GameMasters.GameMasters;
 using NUnit.Framework.Constraints;
-using Heroes.Campaigns.Campaign;
 
 namespace Heroes.Genres.Genre;
 
 public class GenreTests
 {
     static readonly Heroes heroes = new();
-    static _Campaigns campaigns = heroes.Campaigns;
-    static _Players players = heroes.Players;
-    static _GameMasters gameMasters = heroes.GameMasters;
     Genre? genre = null;
     [SetUp]
     public void Setup()
     {
     }
-    static readonly TestCaseData[] NullConstructor_Cases = [
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            //new CampaignKeySet(Campaigns: new([ICampaigns.CAMPAIGNS["Unknown Campaign"]]), MasterCampaigns: ref ICampaigns.CAMPAIGNS);
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            //new PlayerKeySet(Players: new([IPlayers.PLAYERS["Unknown Player"]]), MasterPlayers: ref IPlayers.PLAYERS);
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            //new GameMasterKeySet(GameMasters: new([IGameMasters.GAME_MASTERS["Unknown Game Master"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("NullConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A")
-    ];
+    static readonly Func<String, Dictionary<String, Dictionary<String, Object[]>>, TestCaseData[]> TestCaseDataArray = (testName, testData) =>
+        {
+            List<TestCaseData> result = [];
+            if (testData.ContainsKey(testName)) for (int i = 0; i < testData[testName][IGenre.TestCaseDataString].Length; i++)
+                {
+                    TestCaseData data = (TestCaseData)testData[testName][IGenre.TestCaseDataString][i];
+                    data.SetName(testName).SetDescription((String)testData[testName][IGenre.DescriptionString][testData[testName][IGenre.DescriptionString].Length > 1 ? i : 0]).SetCategory((String)testData[testName][IGenre.CategoryString][testData[testName][IGenre.CategoryString].Length > 1 ? i : 0]).SetProperty(IGenre.TestCaseIdString, (String)testData[testName][IGenre.TestCaseIdString][testData[testName][IGenre.TestCaseIdString].Length > 1 ? i : 0]);
+                    result.Add(data);
+                }
+            return [.. result];
+        };
+    static readonly TestCaseData[] NullConstructorTestCases = TestCaseDataArray(nameof(NullConstructorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(NullConstructor_Cases))]
+    [TestCaseSource(nameof(NullConstructorTestCases))]
     public void NullConstructorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.Multiple(() =>
@@ -51,16 +45,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static readonly TestCaseData[] NullInitializor_Cases = [
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("NullInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A")
-    ];
+    static readonly TestCaseData[] NullInitializorTestCases = TestCaseDataArray(nameof(NullInitializorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(NullInitializor_Cases))]
+    [TestCaseSource(nameof(NullInitializorTestCases))]
     public void NullInitializorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.Multiple(() =>
@@ -89,22 +76,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static readonly TestCaseData[] KeyConstructor_Cases = [
-        new TestCaseData(
-            "Custom Genre Key", IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
-    ];
+    static readonly TestCaseData[] KeyConstructorTestCases = TestCaseDataArray(nameof(KeyConstructorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(KeyConstructor_Cases))]
+    [TestCaseSource(nameof(KeyConstructorTestCases))]
     public void KeyConstructorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -119,22 +93,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] KeyInitializor_Cases = {
-        new TestCaseData(
-            "Custom Genre Key", IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] KeyInitializorTestCases = TestCaseDataArray(nameof(KeyInitializorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(KeyInitializor_Cases))]
+    [TestCaseSource(nameof(KeyInitializorTestCases))]
     public void KeyInitializorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -157,22 +118,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] NameConstructor_Cases = {
-        new TestCaseData(
-            "Custom Genre Key", "Custom Genre",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("NameConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("NameConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] NameConstructorTestCases = TestCaseDataArray(nameof(NameConstructorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(NameConstructor_Cases))]
+    [TestCaseSource(nameof(NameConstructorTestCases))]
     public void NameConstructorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -187,22 +135,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] NameInitializor_Cases = {
-        new TestCaseData(
-            "Custom Genre Key", "Custom Genre",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("NameInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("NameInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] NameInitializorTestCases = TestCaseDataArray(nameof(NameInitializorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(NameInitializor_Cases))]
+    [TestCaseSource(nameof(NameInitializorTestCases))]
     public void NameInitializorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -225,22 +160,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] KeyNameConstructor_Cases = {
-        new TestCaseData(
-            "Alternate Custom Genre Key", "Custom Genre",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyNameConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyNameConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] KeyNameConstructorTestCases = TestCaseDataArray(nameof(KeyNameConstructorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(KeyNameConstructor_Cases))]
+    [TestCaseSource(nameof(KeyNameConstructorTestCases))]
     public void KeyNameConstructorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -255,22 +177,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] KeyNameInitializor_Cases = {
-        new TestCaseData(
-            "Alternate Custom Genre Key", "Custom Genre",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyNameInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("KeyNameInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] KeyNameInitializorTestCases = TestCaseDataArray(nameof(KeyNameInitializorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(KeyNameInitializor_Cases))]
+    [TestCaseSource(nameof(KeyNameInitializorTestCases))]
     public void KeyNameInitializorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -293,22 +202,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] IndexConstructor_Cases = {
-        new TestCaseData(
-            1, "Genre 1", "Unknown Genre 1",
-            new CampaignKeySet(Campaigns: new([new Campaign(Key: "Campaign 1")]), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("IndexConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            2, "Genre 2", "Unknown Genre 2",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("IndexConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] IndexConstructorTestCases = TestCaseDataArray(nameof(IndexConstructorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(IndexConstructor_Cases))]
+    [TestCaseSource(nameof(IndexConstructorTestCases))]
     public void IndexConstructorTest(int givenIndex, string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -323,22 +219,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] IndexInitializor_Cases = {
-        new TestCaseData(
-            1, "Genre 1", "Unknown Genre 1",
-            new CampaignKeySet(Campaigns: new([new Campaign(Key: "Campaign 1")]), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("IndexInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            2, "Genre 2", "Unknown Genre 2",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("IndexInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] IndexInitializorTestCases = TestCaseDataArray(nameof(IndexInitializorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(IndexInitializor_Cases))]
+    [TestCaseSource(nameof(IndexInitializorTestCases))]
     public void IndexInitializorTest(int givenIndex, string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -361,22 +244,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] CopyConstructor_Cases = {
-        new TestCaseData(
-            "Alternate Custom Genre Key", "Custom Genre",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("CopyConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("CopyConstructorTest").SetDescription("").SetCategory("Constructor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] CopyConstructorTestCases = TestCaseDataArray(nameof(CopyConstructorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(CopyConstructor_Cases))]
+    [TestCaseSource(nameof(CopyConstructorTestCases))]
     public void CopyConstructorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -391,25 +261,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] CopyInitializor_Cases = {
-        new TestCaseData(
-            "Alternate Custom Genre Key", "Custom Genre",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("CopyInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, IGenre.DefaultName,
-            //new CampaignKeySet(Campaigns: new([ICampaigns.CAMPAIGNS["Unknown Campaign"]]), MasterCampaigns: ref ICampaigns.CAMPAIGNS);
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            //new PlayerKeySet(Players: new([IPlayers.PLAYERS["Unknown Player"]]), MasterPlayers: ref IPlayers.PLAYERS);
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            //new GameMasterKeySet(GameMasters: new([IGameMasters.GAME_MASTERS["Unknown Game Master"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("CopyInitializorTest").SetDescription("").SetCategory("Initializor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] CopyInitializorTestCases = TestCaseDataArray(nameof(CopyInitializorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(CopyInitializor_Cases))]
+    [TestCaseSource(nameof(CopyInitializorTestCases))]
     public void CopyInitializorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -432,13 +286,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] GetKeyAccessor_Cases = {
-        new TestCaseData(
-            IGenre.DefaultKey
-            ).SetName("GetKeyAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A")
-    };
+    static readonly TestCaseData[] GetKeyAccessorTestCases = TestCaseDataArray(nameof(GetKeyAccessorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(GetKeyAccessor_Cases))]
+    [TestCaseSource(nameof(GetKeyAccessorTestCases))]
     public void GetKeyAccessorTest(string caseExpectedKey)
     {
         Assert.That(caseExpectedKey, Is.Not.Null);
@@ -447,22 +297,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreKeyEqual(caseExpectedKey));
     }
-    static TestCaseData[] SetKeyAccessor_Cases = {
-        new TestCaseData(
-            "Genre 1", IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new([new Campaign(Key: "Campaign 1")]), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("SetKeyAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            "Custom Genre Key", IGenre.DefaultName,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("SetKeyAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] SetKeyAccessorTestCases = TestCaseDataArray(nameof(SetKeyAccessorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(SetKeyAccessor_Cases))]
+    [TestCaseSource(nameof(SetKeyAccessorTestCases))]
     public void SetKeyAccessorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(caseExpectedKey, Is.Not.Null);
@@ -479,13 +316,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] GetNameAccessor_Cases = {
-        new TestCaseData(
-            IGenre.DefaultName
-            ).SetName("GetNameAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A")
-    };
+    static readonly TestCaseData[] GetNameAccessorTestCases = TestCaseDataArray(nameof(GetNameAccessorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(GetNameAccessor_Cases))]
+    [TestCaseSource(nameof(GetNameAccessorTestCases))]
     public void GetNameAccessorTest(string caseExpectedName)
     {
         Assert.That(caseExpectedName, Is.Not.Null);
@@ -494,22 +327,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreNameEqual(caseExpectedName));
     }
-    static TestCaseData[] SetNameAccessor_Cases = {
-        new TestCaseData(
-            IGenre.DefaultKey, "Unknown Genre 1",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("SetNameAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A"),
-        new TestCaseData(
-            IGenre.DefaultKey, "Custom Genre",
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("SetNameAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] SetNameAccessorTestCases = TestCaseDataArray(nameof(SetNameAccessorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(SetNameAccessor_Cases))]
+    [TestCaseSource(nameof(SetNameAccessorTestCases))]
     public void SetNameAccessorTest(string caseExpectedKey, string caseExpectedName, CampaignKeySet caseExpectedCampaignKeys, PlayerKeySet caseExpectedPlayerKeys, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.DoesNotThrow(() => genre = new());
@@ -526,18 +346,9 @@ public class GenreTests
         Assert.That(genre, Is.InstanceOf<Genre>());
         Assert.That(genre, Is.GenreElementsEqual(heroes, caseExpectedKey, caseExpectedName, caseExpectedCampaignKeys, caseExpectedPlayerKeys, caseExpectedGameMasterKeys));
     }
-    static TestCaseData[] GetCampaignKeysAccessor_Cases = {
-        new TestCaseData(
-            IGenre.DefaultKey,
-            new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns)
-            ).SetName("GetCampaignKeysAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A"),
-            new TestCaseData(
-            "Genre 1",
-            new CampaignKeySet(Campaigns: new([new Campaign(Key: "Campaign 1")]), MasterCampaigns: ref campaigns)
-            ).SetName("GetCampaignKeysAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "B")
-    };
+    static readonly TestCaseData[] GetCampaignKeysAccessorTestCases = TestCaseDataArray(nameof(GetCampaignKeysAccessorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(GetCampaignKeysAccessor_Cases))]
+    [TestCaseSource(nameof(GetCampaignKeysAccessorTestCases))]
     public void GetCampaignKeysAccessorTest(string caseExpectedKey, CampaignKeySet caseExpectedCampaignKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -550,14 +361,9 @@ public class GenreTests
         Assert.That(genre, Is.GenreKeyEqual(caseExpectedKey));
         Assert.That(genre, Is.GenreCampaignKeysEqual(heroes, caseExpectedCampaignKeys));
     }
-    static TestCaseData[] GetPlayerKeysAccessor_Cases = {
-        new TestCaseData(
-            IGenre.DefaultKey,
-            new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players)
-            ).SetName("GetPlayerKeysAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A")
-    };
+    static readonly TestCaseData[] GetPlayerKeysAccessorTestCases = TestCaseDataArray(nameof(GetPlayerKeysAccessorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(GetPlayerKeysAccessor_Cases))]
+    [TestCaseSource(nameof(GetPlayerKeysAccessorTestCases))]
     public void GetPlayerKeysAccessorTest(string caseExpectedKey, PlayerKeySet caseExpectedPlayerKeys)
     {
         Assert.That(heroes, Is.Not.Null);
@@ -570,14 +376,9 @@ public class GenreTests
         Assert.That(genre, Is.GenreKeyEqual(caseExpectedKey));
         Assert.That(genre, Is.GenrePlayerKeysEqual(heroes, caseExpectedPlayerKeys));
     }
-    static TestCaseData[] GetGameMasterKeysAccessor_Cases = {
-        new TestCaseData(
-            IGenre.DefaultKey,
-            new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)
-            ).SetName("GetGameMasterKeysAccessorTest").SetDescription("").SetCategory("Accessor").SetProperty("TestCaseId", "A")
-    };
+    static readonly TestCaseData[] GetGameMasterKeysAccessorTestCases = TestCaseDataArray(nameof(GetGameMasterKeysAccessorTest), IGenre.TEST_CASE_DATA);
     [Test]
-    [TestCaseSource(nameof(GetGameMasterKeysAccessor_Cases))]
+    [TestCaseSource(nameof(GetGameMasterKeysAccessorTestCases))]
     public void GetGameMasterKeysAccessorTest(string caseExpectedKey, GameMasterKeySet caseExpectedGameMasterKeys)
     {
         Assert.That(heroes, Is.Not.Null);

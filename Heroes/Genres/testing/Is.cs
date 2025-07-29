@@ -1,4 +1,5 @@
 using Heroes.Campaigns;
+using Heroes.Campaigns.Campaign;
 using Heroes.GameMasters;
 using Heroes.GameMasters.GameMaster.Players;
 using Heroes.Genres;
@@ -61,4 +62,58 @@ public class Is : NUnit.Framework.Is
     {
         return new GenresGameMasterKeysEqualConstraint(context, expected);
     }
+    public static CampaignEqualConstraint CampaignEqual(_Heroes context, Campaign expected)
+    {
+        return new CampaignEqualConstraint(context, expected);
+    }
+    public static CampaignElementsEqualConstraint CampaignElementsEqual(_Heroes context, string expectedKey, string expectedName, GenreKeySet expectedGenreKeys, PlayerKeySet expectedPlayerKeys, GameMasterKeySet expectedGameMasterKeys)
+    {
+        return new CampaignElementsEqualConstraint(context, expectedKey, expectedName, expectedGenreKeys, expectedPlayerKeys, expectedGameMasterKeys);
+    }
+    public static CampaignKeyEqualConstraint CampaignKeyEqual(string expected)
+    {
+        return new CampaignKeyEqualConstraint(expected);
+    }
+    public static CampaignNameEqualConstraint CampaignNameEqual(string expected)
+    {
+        return new CampaignNameEqualConstraint(expected);
+    }
+    public static CampaignGenreKeysEqualConstraint CampaignGenreKeysEqual(_Heroes context, GenreKeySet expected)
+    {
+        return new CampaignGenreKeysEqualConstraint(context, expected);
+    }
+    public static CampaignPlayerKeysEqualConstraint CampaignPlayerKeysEqual(_Heroes context, PlayerKeySet expected)
+    {
+        return new CampaignPlayerKeysEqualConstraint(context, expected);
+    }
+    public static CampaignGameMasterKeysEqualConstraint CampaignGameMasterKeysEqual(_Heroes context, GameMasterKeySet expected)
+    {
+        return new CampaignGameMasterKeysEqualConstraint(context, expected);
+    }
+    /*
+    public static CampaignsEqualConstraint CampaignsEqual(_Heroes context, Campaigns expected)
+    {
+        return new CampaignsEqualConstraint(context, expected);
+    }
+    public static CampaignsContainCampaignConstraint CampaignsContainCampaign(_Heroes context, Campaign expected)
+    {
+        return new CampaignsContainCampaignConstraint(context, expected);
+    }
+    public static CampaignsCountEqualConstraint CampaignsCountEqual(int expected)
+    {
+        return new CampaignsCountEqualConstraint(expected);
+    }
+    public static CampaignsCampaignKeysEqualConstraint CampaignsCampaignKeysEqual(Heroes.Heroes context, CampaignKeySet expected)
+    {
+        return new CampaignsCampaignKeysEqualConstraint(context, expected);
+    }
+    public static CampaignsPlayerKeysEqualConstraint CampaignsPlayerKeysEqual(Heroes.Heroes context, PlayerKeySet expected)
+    {
+        return new CampaignsPlayerKeysEqualConstraint(context, expected);
+    }
+    public static CampaignsGameMasterKeysEqualConstraint CampaignsGameMasterKeysEqual(Heroes.Heroes context, GameMasterKeySet expected)
+    {
+        return new CampaignsGameMasterKeysEqualConstraint(context, expected);
+    }
+    /**/
 }
