@@ -1,13 +1,14 @@
 namespace Heroes.Genres;
 
-internal interface IGenreKeySet : ISet<String>
+internal interface IGenreKeySet : ISet<string>
 {
-    public String[] Keys { get; set; }
-    public static String[] GET_KEYS(IGenreKeySet genresKeySet)
+    static public GenreKeySet DefaultGenreKeys = new(Genres: new Genres(Original: IGenres.GENRES), ref IGenres.GENRES);
+    public string[] Keys { get; set; }
+    public static string[] GET_KEYS(IGenreKeySet genresKeySet)
     {
         return [.. genresKeySet];
     }
-    public static void SET_KEYS(IGenreKeySet genresKeySet, String[] value)
+    public static void SET_KEYS(IGenreKeySet genresKeySet, string[] value)
     {
         genresKeySet.Clear();
         genresKeySet.UnionWith(value);
@@ -16,7 +17,7 @@ internal interface IGenreKeySet : ISet<String>
     {
         genresKeySet.Clear();
         genresKeySet.UnionWith(genres.Keys);
-        foreach (String key in genresKeySet.Except(masterGenres.Keys))
+        foreach (string key in genresKeySet.Except(masterGenres.Keys))
         {
             masterGenres.Add(key, genres[key]);
         }
@@ -24,7 +25,7 @@ internal interface IGenreKeySet : ISet<String>
     public static void INIT(IGenreKeySet genresKeySet, IEnumerable<string> GenreKeys)
     {
         genresKeySet.Clear();
-        foreach (String key in GenreKeys)
+        foreach (string key in GenreKeys)
         {
             genresKeySet.Add(key);
         }
@@ -32,7 +33,7 @@ internal interface IGenreKeySet : ISet<String>
     public static void INIT(IGenreKeySet genresKeySet, GenreKeySet Original)
     {
         genresKeySet.Clear();
-        foreach (String key in Original)
+        foreach (string key in Original)
         {
             genresKeySet.Add(key);
         }
@@ -51,7 +52,7 @@ internal interface IGenreKeySet : ISet<String>
         }
         result.Clear();
         GenreKeySet resultKeySet = new(intersectedGenres, ref masterGenres);
-        foreach (String key in resultKeySet)
+        foreach (string key in resultKeySet)
         {
             result.Add(masterGenres[key]);
         }
@@ -60,6 +61,6 @@ internal interface IGenreKeySet : ISet<String>
     public void Init(Genres Genres, ref Genres MasterGenres);
     public void Init(IEnumerable<string> GenreKeys);
     public void Init(GenreKeySet Original);
-    public String[] GetKeys();
+    public string[] GetKeys();
     public Genres Genres(Genres MasterGenres, bool throwIfMissingInMaster = true);
 }

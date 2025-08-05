@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Heroes.Genres;
 using Heroes.Genres.Genre;
 using _Heroes = Heroes.Heroes;

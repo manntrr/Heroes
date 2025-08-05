@@ -7,53 +7,54 @@ using GameMasterObject = Heroes.GameMasters.GameMaster.GameMaster;
 using PlayersObject = Heroes.GameMasters.GameMaster.Players.Players;
 using PlayerKeySet = Heroes.GameMasters.GameMaster.Players.PlayerKeySet;
 using PlayerObject = Heroes.GameMasters.GameMaster.Players.Player.Player;
+using TCDD = NUnit.Framework.TestCaseDataDictionary;
+using GenreObject = Heroes.Genres.Genre.Genre;
+using GenreInterface = Heroes.Genres.Genre.IGenre;
 
 namespace Heroes.Genres.Genre;
 
 public interface IGenre
 {
-    static readonly string EmptyString = "";
-    static readonly string SpaceString = " ";
     static readonly string GenreString = "Genre";
     static readonly string KeyString = "Key";
     static readonly string UnknownString = "Unknown";
     static readonly string CustomString = "Custom";
     static readonly string AlternateString = "Alternate";
-    static readonly string CustomGenreString = CustomString + SpaceString + UnknownString;
-    static readonly string CustomGenreKeyString = CustomGenreString + SpaceString + KeyString;
-    static readonly string AlternateCustomGenreKeyString = AlternateString + SpaceString + CustomGenreKeyString;
-    static readonly string Genre1String = GenreString + SpaceString + "1";
-    static readonly string UnknownGenre1String = UnknownString + SpaceString + Genre1String;
-    static readonly string Genre2String = GenreString + SpaceString + "2";
-    static readonly string UnknownGenre2String = UnknownString + SpaceString + Genre2String;
-    public static readonly string DefaultKey = UnknownString + SpaceString + GenreString + SpaceString + KeyString;
-    public static readonly string DefaultName = UnknownString + SpaceString + GenreString;
+    static readonly string CustomGenreString = CustomString + TCDD.SpaceString + UnknownString;
+    static readonly string CustomGenreKeyString = CustomGenreString + TCDD.SpaceString + KeyString;
+    static readonly string AlternateCustomGenreKeyString = AlternateString + TCDD.SpaceString + CustomGenreKeyString;
+    static readonly string Genre1String = GenreString + TCDD.SpaceString + "1";
+    static readonly string UnknownGenre1String = UnknownString + TCDD.SpaceString + Genre1String;
+    static readonly string Genre2String = GenreString + TCDD.SpaceString + "2";
+    static readonly string UnknownGenre2String = UnknownString + TCDD.SpaceString + Genre2String;
+    public static readonly string DefaultKey = UnknownString + TCDD.SpaceString + GenreString + TCDD.SpaceString + KeyString;
+    public static readonly string DefaultName = UnknownString + TCDD.SpaceString + GenreString;
     static readonly string CampaignString = "Campaign";
-    static readonly string Campaign1String = CampaignString + SpaceString + "1";
-    public static void INIT(IGenre Genre)
+    static readonly string Campaign1String = CampaignString + TCDD.SpaceString + "1";
+    public static void INIT(GenreInterface Genre)
     {
         Genre.Key = DefaultKey;
         Genre.Name = DefaultName;
     }
-    public static void INIT(IGenre Genre, string Name)
+    public static void INIT(GenreInterface Genre, string Name)
     {
-        INIT(Genre: Genre, Key: Name + SpaceString + KeyString, Name: Name);
+        INIT(Genre: Genre, Key: Name + TCDD.SpaceString + KeyString, Name: Name);
     }
-    public static void INIT(IGenre Genre, string Key, string? Name = null)
+    public static void INIT(GenreInterface Genre, string Key, string? Name = null)
     {
         INIT(Genre: Genre);
         Genre.Key = Key;
         if (Name is not null) Genre.Name = Name;
     }
-    public static void INIT(IGenre Genre, int Index)
+    public static void INIT(GenreInterface Genre, int Index)
     {
-        INIT(Genre: Genre, Key: GenreString + SpaceString + Index.ToString(), Name: DefaultName + SpaceString + Index.ToString());
+        INIT(Genre: Genre, Key: GenreString + TCDD.SpaceString + Index.ToString(), Name: DefaultName + TCDD.SpaceString + Index.ToString());
     }
-    public static void INIT(IGenre Genre, IGenre Original)
+    public static void INIT(GenreInterface Genre, GenreInterface Original)
     {
         INIT(Genre: Genre, Key: Original.Key, Name: Original.Name);
     }
-    public static CampaignKeySet CAMPAIGN_KEYS(IGenre Genre, Heroes Heroes)
+    public static CampaignKeySet CAMPAIGN_KEYS(GenreInterface Genre, Heroes Heroes)
     {
         CampaignsObject temp = [];
         CampaignsObject campaigns = [];
@@ -64,7 +65,7 @@ public interface IGenre
         }
         return new(campaigns, ref temp);
     }
-    public static PlayerKeySet PLAYER_KEYS(IGenre Genre, Heroes Heroes)
+    public static PlayerKeySet PLAYER_KEYS(GenreInterface Genre, Heroes Heroes)
     {
         PlayersObject temp = [];
         PlayersObject players = [];
@@ -75,7 +76,7 @@ public interface IGenre
         }
         return new(players, ref temp);
     }
-    public static GameMasterKeySet GAME_MASTER_KEYS(IGenre Genre, Heroes Heroes)
+    public static GameMasterKeySet GAME_MASTER_KEYS(GenreInterface Genre, Heroes Heroes)
     {
         GameMastersObject temp = [];
         GameMastersObject gameMasters = [];
@@ -92,8 +93,8 @@ public interface IGenre
     public void Init(string Name);
     public void Init(string Key, string? Name = null);
     public void Init(int Index);
-    public void Init(IGenre Genre);
-    public void Init(Genre Genre);
+    public void Init(GenreInterface Genre);
+    public void Init(GenreObject Genre);
     public CampaignKeySet CampaignKeys(Heroes Heroes);
     public PlayerKeySet PlayerKeys(Heroes Heroes);
     public GameMasterKeySet GameMasterKeys(Heroes Heroes);
@@ -104,8 +105,8 @@ public interface IGenre
     private static int counter = 0;
     static readonly TestCasesDataDictionary TEST_CASE_DATA = new([
         new(nameof(GenreTests.NullConstructorTest), new(
-            TestCaseDescriptions: [EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.ConstructorString],
+            TestCaseDescriptions: [TCDD.EmptyString],
+            TestCaseCategories: [TCDD.ConstructorString],
             TestCaseIds: [counter++.ToString()],
             TestCaseData: [
                 new(
@@ -119,8 +120,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.NullInitializorTest), new(
-            TestCaseDescriptions: [EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.InitializorString],
+            TestCaseDescriptions: [TCDD.EmptyString],
+            TestCaseCategories: [TCDD.InitializorString],
             TestCaseIds: [counter++.ToString()],
             TestCaseData: [
                 new(
@@ -131,8 +132,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.KeyConstructorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.ConstructorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.ConstructorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -149,8 +150,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.KeyInitializorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.InitializorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.InitializorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -167,8 +168,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.NameConstructorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.ConstructorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.ConstructorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -185,8 +186,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.NameInitializorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.InitializorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.InitializorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -203,8 +204,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.KeyNameConstructorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.ConstructorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.ConstructorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -221,8 +222,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.KeyNameInitializorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.InitializorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.InitializorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -239,8 +240,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.IndexConstructorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.ConstructorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.ConstructorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -257,8 +258,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.IndexInitializorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.InitializorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.InitializorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -275,8 +276,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.CopyConstructorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.ConstructorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.ConstructorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -293,8 +294,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.CopyInitializorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.InitializorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.InitializorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -311,8 +312,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.GetKeyAccessorTest), new(
-            TestCaseDescriptions: [EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.AccessorString],
+            TestCaseDescriptions: [TCDD.EmptyString],
+            TestCaseCategories: [TCDD.AccessorString],
             TestCaseIds: [counter++.ToString()],
             TestCaseData: [
                 new(
@@ -320,8 +321,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.SetKeyAccessorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.AccessorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.AccessorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -338,8 +339,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.GetNameAccessorTest), new(
-            TestCaseDescriptions: [EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.AccessorString],
+            TestCaseDescriptions: [TCDD.EmptyString],
+            TestCaseCategories: [TCDD.AccessorString],
             TestCaseIds: [counter++.ToString()],
             TestCaseData: [
                 new(
@@ -347,8 +348,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.SetNameAccessorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.AccessorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.AccessorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -365,8 +366,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.GetCampaignKeysAccessorTest), new(
-            TestCaseDescriptions: [EmptyString, EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.AccessorString],
+            TestCaseDescriptions: [TCDD.EmptyString, TCDD.EmptyString],
+            TestCaseCategories: [TCDD.AccessorString],
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
@@ -379,8 +380,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.GetPlayerKeysAccessorTest), new(
-            TestCaseDescriptions: [EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.AccessorString],
+            TestCaseDescriptions: [TCDD.EmptyString],
+            TestCaseCategories: [TCDD.AccessorString],
             TestCaseIds: [counter++.ToString()],
             TestCaseData: [
                 new(
@@ -389,8 +390,8 @@ public interface IGenre
                     )
             ])),
         new(nameof(GenreTests.GetGameMasterKeysAccessorTest), new(
-            TestCaseDescriptions: [EmptyString],
-            TestCaseCategories: [TestCaseDataDictionary.AccessorString],
+            TestCaseDescriptions: [TCDD.EmptyString],
+            TestCaseCategories: [TCDD.AccessorString],
             TestCaseIds: [counter++.ToString()],
             TestCaseData: [
                 new(

@@ -9,6 +9,8 @@ public class TestCaseDataDictionary : Dictionary<String, Object[]>
     public static readonly String InitializorString = "Initializor";
     public static readonly String AccessorString = "Accessor";
     public static readonly String TestCaseIdString = "TestCaseId";
+    public static readonly string EmptyString = "";
+    public static readonly string SpaceString = " ";
     public TestCaseDataDictionary() : base() { }
     public TestCaseDataDictionary(String TestCaseElement, Object[] TestCaseData) => Add(TestCaseElement, TestCaseData);
     public TestCaseDataDictionary(Tuple<String, Object[]> TestCase) => Add(TestCase.Item1, TestCase.Item2);
