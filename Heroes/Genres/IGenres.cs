@@ -17,6 +17,7 @@ using PlayerKeySet = Heroes.GameMasters.GameMaster.Players.PlayerKeySet;
 //using PlayerObject = Heroes.GameMasters.GameMaster.Players.Player.Player;
 using TCDD = NUnit.Framework.TestCaseDataDictionary;
 using Heroes.Genres.Genre;
+using System.Reflection.Metadata.Ecma335;
 
 
 namespace Heroes.Genres;
@@ -112,17 +113,33 @@ public interface IGenres : IDictionary<string, GenreObject>
         if (Genres.Count > 0)
             foreach (var key in Genres.Keys)
                 Genres.Remove(key);
-        foreach (KeyValuePair<string, GenreObject> genre in Original)
+        foreach (KeyValuePair<string, GenreObject> genre in ((IDictionary<string, GenreObject>)Original))
         {
             Genres.Add(genre);
         }
     }
+
     static public IEnumerator<KeyValuePair<string, GenreObject>> GET_ENUMERATOR(Genres Genres)
     {
-        foreach (var kvp in Genres)
+        List<KeyValuePair<string, GenreObject>> genrePairs = new();
+        foreach (String key in Genres.Keys)
         {
-            yield return new KeyValuePair<string, GenreObject>(kvp.Key, (GenreObject)kvp.Value);
+            genrePairs.Add(new(key, Genres[key]));
         }
+        foreach (KeyValuePair<string, GenreObject> kvp in genrePairs)
+        {
+            yield return kvp;
+        }
+        /*
+            /// <summary>
+            /// Yields all values in the collection
+            /// </summary>
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                // call the generic version of the method
+                return GetEnumerator();
+            }
+        /**/
     }
     static public ICollection<string> KEYS(Dictionary<string, GenreObject> Genres)
     {
@@ -196,13 +213,93 @@ public interface IGenres : IDictionary<string, GenreObject>
     }
     static public GenresInterfaceObject CONVERT_DICTIONARY_TO_GENRES(Dictionary<string, GenreInterfaceObject> Dictionary)
     {
-        GenresInterfaceObject result = new Genres();
+        GenresInterfaceObject result = new GenresObject();
         if (result.Count > 0)
             foreach (var key in result.Keys)
                 result.Remove(key);
         foreach (KeyValuePair<string, GenreInterfaceObject> genre in Dictionary)
         {
             result.Add((GenreObject)genre.Value);
+        }
+        return result;
+    }
+    public static GenreKeySet CONVERT_GENRES_TO_GENRE_KEY_SET(GenresObject Genres)
+    {
+        return (GenreKeySet)Genres.Keys;
+    }
+    public static GenresObject CONVERT_GENRE_KEY_SET_TO_GENRES(GenreKeySet KeySet, GenresObject MasterList, bool ThrowIfMissing = true)
+    {
+        throw new NotImplementedException();
+    }
+    public static GenreObject[] CONVERT_GENRES_TO_GENRE_ARRAY(GenresObject Genres)
+    {
+        List<GenreObject> list = [];
+        foreach (string key in Genres.Keys)
+        {
+            list.Add(Genres[key]);
+        }
+        return list.ToArray<GenreObject>();
+    }
+    public static GenresObject CONVERT_GENRE_ARRAY_TO_GENRES(GenreObject[] GenreArray)
+    {
+        GenresObject result = [];
+        foreach (GenreObject genre in GenreArray)
+        {
+            result.Add(genre);
+        }
+        return result;
+    }
+    public static KeyValuePair<string, string>[] CONVERT_GENRES_TO_GENRE_KEY_NAME_PAIR_ARRAY(GenresObject Genres)
+    {
+        List<KeyValuePair<string, string>> list = [];
+        foreach (string key in Genres.Keys)
+        {
+            list.Add(new(key, Genres[key].Name));
+        }
+        return list.ToArray<KeyValuePair<string, string>>();
+    }
+    public static GenresObject CONVERT_GENRE_KEY_NAME_PAIR_ARRAY_TO_GENRES(KeyValuePair<string, string>[] GenreKeyNamePairArray)
+    {
+        GenresObject result = [];
+        foreach (KeyValuePair<string, string> pair in GenreKeyNamePairArray)
+        {
+            result.Add(new GenreObject(pair.Key, pair.Value));
+        }
+        return result;
+    }
+    public static KeyValuePair<string, GenreObject>[] CONVERT_GENRES_TO_GENRE_KEY_PAIR_ARRAY(GenresObject Genres)
+    {
+        List<KeyValuePair<string, GenreObject>> list = [];
+        foreach (string key in Genres.Keys)
+        {
+            list.Add(new(key, Genres[key]));
+        }
+        return list.ToArray<KeyValuePair<string, GenreObject>>();
+    }
+    public static GenresObject CONVERT_GENRE_KEY_PAIR_ARRAY_TO_GENRES(KeyValuePair<string, GenreObject>[] GenreKeyPairArray)
+    {
+        GenresObject result = [];
+        foreach (KeyValuePair<string, GenreObject> pair in GenreKeyPairArray)
+        {
+            result.Add(pair.Key, pair.Value);
+        }
+        return result;
+    }
+    public static Dictionary<string, string> CONVERT_GENRES_TO_GENRE_KEY_NAME_DICTIONARY(GenresObject Genres)
+    {
+        Dictionary<string, string> result = [];
+        foreach (string key in Genres.Keys)
+        {
+            result.Add(key, Genres[key].Name);
+        }
+        return result;
+    }
+    public static GenresObject CONVERT_GENRE_KEY_NAME_DICTIONARY_TO_GENRES(Dictionary<string, string> GenreKeyNameDictionary)
+    {
+        GenresObject result = [];
+        foreach (string key in GenreKeyNameDictionary.Keys)
+        {
+            result.Add(new GenreObject(Key: key, Name: GenreKeyNameDictionary[key]));
         }
         return result;
     }
@@ -423,12 +520,12 @@ public interface IGenres : IDictionary<string, GenreObject>
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
-                    new KeyValuePair<string,IGenre>(key: "Custom Genre 1 Key", value: new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")), new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+                    new KeyValuePair<string,GenreObject>(key: "Custom Genre 1 Key", value: new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")), new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)),
                 new(
-                    new KeyValuePair<string,IGenre>(key: "Custom Genre 2 Key", value: new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")), new GenresObject([new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+                    new KeyValuePair<string,GenreObject>(key: "Custom Genre 2 Key", value: new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")), new GenresObject([new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
@@ -440,13 +537,13 @@ public interface IGenres : IDictionary<string, GenreObject>
             TestCaseData: [
                 new(
                     new GenresObject([new GenreObject(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new GenreObject(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
-                    new KeyValuePair<string,IGenre>(key: "Custom Genre 1 Key", value: new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")), new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+                    new KeyValuePair<string,GenreObject>(key: "Custom Genre 1 Key", value: new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")), new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)),
                 new(
                     new GenresObject([new GenreObject(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new GenreObject(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
-                    new KeyValuePair<string,IGenre>(key: "Custom Genre 2 Key", value: new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")), new GenresObject([new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+                    new KeyValuePair<string,GenreObject>(key: "Custom Genre 2 Key", value: new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")), new GenresObject([new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
@@ -597,12 +694,12 @@ public interface IGenres : IDictionary<string, GenreObject>
             TestCaseIds: [counter++.ToString(),counter++.ToString()],
             TestCaseData: [
                 new(
-                    new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+                    new KeyValuePair<string, GenreObject>[] { new KeyValuePair<string, GenreObject>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)),
                 new(
-                    new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")), new KeyValuePair<string, IGenre>(key: "Custom Genre 2 Key", value:  new GenreObject(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+                    new KeyValuePair<string, GenreObject>[] { new KeyValuePair<string, GenreObject>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")), new KeyValuePair<string, GenreObject>(key: "Custom Genre 2 Key", value:  new GenreObject(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))
@@ -614,13 +711,13 @@ public interface IGenres : IDictionary<string, GenreObject>
             TestCaseData: [
                 new(
                     new GenresObject([new GenreObject(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new GenreObject(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
-                    new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
+                    new KeyValuePair<string, GenreObject>[] { new KeyValuePair<string, GenreObject>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters)),
                 new(
                     new GenresObject([new GenreObject(Key: "Custom Genre 1", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2", Name:  "Custom Genre 2"), new GenreObject(Key: "Custom Genre 3", Name:  "Custom Genre 3")]),
-                    new KeyValuePair<string, IGenre>[] { new KeyValuePair<string, IGenre>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")), new KeyValuePair<string, IGenre>(key: "Custom Genre 2 Key", value:  new GenreObject(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
+                    new KeyValuePair<string, GenreObject>[] { new KeyValuePair<string, GenreObject>(key: "Custom Genre 1 Key", value:  new GenreObject(Key: "Custom Genre 1 Key", Name: "Custom Genre 1")), new KeyValuePair<string, GenreObject>(key: "Custom Genre 2 Key", value:  new GenreObject(Key: "Custom Genre 2 Key", Name: "Custom Genre 2")) }, new GenresObject([new GenreObject(Key: "Custom Genre 1 Key", Name:  "Custom Genre 1"), new GenreObject(Key: "Custom Genre 2 Key", Name:  "Custom Genre 2")]),
                     new CampaignKeySet(Campaigns: new(Count: 0), MasterCampaigns: ref campaigns),
                     new PlayerKeySet(Players: new(Count: 0), MasterPlayers: ref players),
                     new GameMasterKeySet(GameMasters: new(Count: 0), MasterGameMasters: ref gameMasters))

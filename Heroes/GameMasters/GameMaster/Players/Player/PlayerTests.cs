@@ -246,7 +246,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -279,7 +280,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -386,7 +388,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -419,7 +422,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -527,7 +531,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -560,7 +565,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -669,7 +675,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -702,7 +709,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Alternate Custom Player Key";
         expectedPlayerName = "Custom Player";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -813,7 +821,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Player 1";
         expectedPlayerName = "Unknown Player 1";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -846,7 +855,8 @@ public class PlayerTests
     {
         expectedPlayerKey = "Player 1";
         expectedPlayerName = "Unknown Player 1";
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
@@ -956,7 +966,8 @@ public class PlayerTests
     {
         expectedPlayerKey = IPlayer.DefaultKey;
         expectedPlayerName = IPlayer.DefaultName;
-        expectedPlayerGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedPlayerGenreKeys = new(new(2), ref genres);
         Assert.DoesNotThrow(() => expectedPlayerGenres = expectedPlayerGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedPlayerGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Player = new());

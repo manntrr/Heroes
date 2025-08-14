@@ -11,6 +11,7 @@ public interface IPlayer
     static public String DefaultKey = UnknownString + " " + PlayerString + " " + KeyString;
     static public String DefaultName = UnknownString + " " + PlayerString;
     static public CampaignKeySet DefaultCampaignKeys = new(Campaigns: new Campaigns.Campaigns(ICampaigns.CAMPAIGNS["Unknown Campaign"]), ref ICampaigns.CAMPAIGNS);
+
     static public GenreKeySet DefaultGenreKeys = new(Genres: new Genres.Genres(IGenres.GENRES["Unknown"]), ref IGenres.GENRES);
 
     static public void INIT(IPlayer Player)

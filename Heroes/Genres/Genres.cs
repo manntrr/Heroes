@@ -93,4 +93,27 @@ public class Genres : Dictionary<string, GenreObject>, GenresInterfaceObject
     public GameMasterKeySet GameMasterKeys(Heroes Heroes) => GenresInterfaceObject.GAME_MASTER_KEYS(this, Heroes);
     public static implicit operator Dictionary<string, GenreInterfaceObject>(GenresObject Genres) => GenresInterfaceObject.CONVERT_GENRES_TO_DICTIONARY(Genres: Genres);
     public static explicit operator GenresObject(Dictionary<string, GenreInterfaceObject> Dictionary) => (GenresObject)GenresInterfaceObject.CONVERT_DICTIONARY_TO_GENRES(Dictionary: Dictionary);
+
+    public static implicit operator GenreKeySet(GenresObject Genres) => GenresInterfaceObject.CONVERT_GENRES_TO_GENRE_KEY_SET(Genres: Genres);
+    //public static explicit operator GenresObject(GenreKeySet KeySet) => (GenresObject)GenresInterfaceObject.CONVERT_GENRE_KEY_SET_TO_GENRES(KeySet: KeySet);
+
+    public static implicit operator GenreObject[](GenresObject Genres) => GenresInterfaceObject.CONVERT_GENRES_TO_GENRE_ARRAY(Genres: Genres);
+    public static explicit operator GenresObject(GenreObject[] GenreArray) => GenresInterfaceObject.CONVERT_GENRE_ARRAY_TO_GENRES(GenreArray: GenreArray);
+
+    public static implicit operator KeyValuePair<string, string>[](GenresObject Genres) => GenresInterfaceObject.CONVERT_GENRES_TO_GENRE_KEY_NAME_PAIR_ARRAY(Genres: Genres);
+    public static explicit operator GenresObject(KeyValuePair<string, string>[] GenreKeyNamePairArray) => GenresInterfaceObject.CONVERT_GENRE_KEY_NAME_PAIR_ARRAY_TO_GENRES(GenreKeyNamePairArray: GenreKeyNamePairArray);
+
+    public static implicit operator KeyValuePair<string, GenreObject>[](GenresObject Genres) => GenresInterfaceObject.CONVERT_GENRES_TO_GENRE_KEY_PAIR_ARRAY(Genres: Genres);
+    public static explicit operator GenresObject(KeyValuePair<string, GenreObject>[] GenreKeyPairArray) => GenresInterfaceObject.CONVERT_GENRE_KEY_PAIR_ARRAY_TO_GENRES(GenreKeyPairArray: GenreKeyPairArray);
+
+    public static implicit operator Dictionary<string, string>(GenresObject Genres) => GenresInterfaceObject.CONVERT_GENRES_TO_GENRE_KEY_NAME_DICTIONARY(Genres: Genres);
+    public static explicit operator GenresObject(Dictionary<string, string> GenreKeyNameDictionary) => GenresInterfaceObject.CONVERT_GENRE_KEY_NAME_DICTIONARY_TO_GENRES(GenreKeyNameDictionary: GenreKeyNameDictionary);
+    /*
+    public void Init(GenreObject[] Array) => GenresInterfaceObject.INIT(this, GenreArray: Array);
+    public void Init(KeyValuePair<string, string>[] GenreKeyNamePairArray) => GenresInterfaceObject.INIT(this, GenreKeyNamePairArray: GenreKeyNamePairArray);
+    public void Init(KeyValuePair<string, GenreObject>[] Array) => GenresInterfaceObject.INIT(this, GenrePairArray: Array);
+    public void Init(Dictionary<string, string> Dictionary) => GenresInterfaceObject.INIT(this, Dictionary: Dictionary);
+    /**/
+
+
 }

@@ -288,7 +288,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -327,7 +328,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -452,7 +454,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -491,7 +494,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -617,7 +621,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -656,7 +661,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -783,7 +789,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -822,7 +829,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Alternate Custom Campaign Key";
         expectedCampaignName = "Custom Campaign";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
@@ -955,7 +963,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Campaign 1";
         expectedCampaignName = "Unknown Campaign 1";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         expectedPlayerKeys = new(Players: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterPlayers: ref IPlayers.PLAYERS);
         expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
         Assert.That(heroes, Is.Not.Null);
@@ -996,7 +1005,8 @@ public class CampaignTests
     {
         expectedCampaignKey = "Campaign 1";
         expectedCampaignName = "Unknown Campaign 1";
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         expectedPlayerKeys = new(Players: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterPlayers: ref IPlayers.PLAYERS);
         expectedGameMasterKeys = new(GameMasters: new([IGameMasters.GAME_MASTERS["Game Master 1"]]), MasterGameMasters: ref IGameMasters.GAME_MASTERS);
         Assert.That(heroes, Is.Not.Null);
@@ -1145,7 +1155,8 @@ public class CampaignTests
         Assert.That(heroes, Is.Not.Null);
         Assert.That(expectedPlayerKeys, Is.Not.Null);
         Assert.That(expectedGameMasterKeys, Is.Not.Null);
-        expectedCampaignGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedCampaignGenreKeys = new(new(2), ref genres);
         Assert.DoesNotThrow(() => expectedCampaignGenres = expectedCampaignGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedCampaignGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => Campaign = new());

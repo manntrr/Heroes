@@ -58,6 +58,25 @@ internal interface IGenreKeySet : ISet<string>
         }
         return result;
     }
+    public static Dictionary<string, Genre.Genre>.KeyCollection CONVERT_GENRE_KEY_SET_TO_DICTIONARY_KEY_COLLECTION(GenreKeySet KeySet)
+    {
+        Dictionary<string, Genre.Genre>.KeyCollection collection = new([]);
+        foreach (string key in KeySet)
+        {
+            collection.Append(key);
+        }
+        return collection;
+    }
+    public static GenreKeySet CONVERT_DICTIONARY_KEY_COLLECTION_TO_GENRE_KEY_SET(Dictionary<string, Genre.Genre>.KeyCollection KeyCollection)
+    {
+        HashSet<string> set = [];
+        foreach (string key in KeyCollection)
+        {
+            set.Add(key);
+        }
+        GenreKeySet keySet = new(set);
+        return keySet;
+    }
     public void Init(Genres Genres, ref Genres MasterGenres);
     public void Init(IEnumerable<string> GenreKeys);
     public void Init(GenreKeySet Original);

@@ -14,6 +14,7 @@ public interface IGameMaster : IPlayer
     static new public String DefaultName = UnknownString + " " + GameMasterString;
 
     static new public CampaignKeySet DefaultCampaignKeys = new(Campaigns: new Campaigns.Campaigns(ICampaigns.CAMPAIGNS["Unknown Campaign"]), ref ICampaigns.CAMPAIGNS);
+
     static new public GenreKeySet DefaultGenreKeys = new(Genres: new Genres.Genres(IGenres.GENRES["Unknown"]), ref IGenres.GENRES);
     static public PlayerKeySet DefaultPlayerKeys = new(Players: new Players.Players(IPlayers.PLAYERS["Unknown Player"]), ref IPlayers.PLAYERS);
 

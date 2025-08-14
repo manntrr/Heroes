@@ -243,7 +243,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -276,7 +277,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -383,7 +385,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -416,7 +419,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -524,7 +528,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Alternate Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -557,7 +562,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Alternate Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -666,7 +672,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Alternate Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -699,7 +706,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Alternate Custom Game Master Key";
         expectedGameMasterName = "Custom Game Master";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -810,7 +818,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Game Master 1";
         expectedGameMasterName = "Unknown Game Master 1";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -843,7 +852,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = "Game Master 1";
         expectedGameMasterName = "Unknown Game Master 1";
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         expectedGameMasterCampaignKeys = IGameMaster.DefaultCampaignKeys;
         expectedGameMasterPlayerKeys = IGameMaster.DefaultPlayerKeys;
         Assert.That(heroes, Is.Not.Null);
@@ -958,7 +968,8 @@ public class GameMasterTests
     {
         expectedGameMasterKey = IGameMaster.DefaultKey;
         expectedGameMasterName = IGameMaster.DefaultName;
-        expectedGameMasterGenreKeys = new(new(2), ref IGenres.GENRES);
+        Genres.Genres genres = new(IGenres.GENRES);
+        expectedGameMasterGenreKeys = new(new(2), ref genres);
         Assert.DoesNotThrow(() => expectedGameMasterGenres = expectedGameMasterGenreKeys.Genres(IGenres.GENRES));
         Assert.That(expectedGameMasterGenres, Is.Not.Null);
         Assert.DoesNotThrow(() => GameMaster = new());
